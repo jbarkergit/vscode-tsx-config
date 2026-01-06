@@ -1,0 +1,117 @@
+[
+    // Folder expand and collapse
+    {
+        "command": "workbench.files.action.collapseExplorerFolders",
+        "key": "alt+c",
+    },
+    // Editor arrow keys
+    {
+        "key": "alt+w",
+        "command": "cursorUp",
+        "when": "editorTextFocus && !suggestWidgetVisible"
+    },
+    {
+        "key": "alt+s",
+        "command": "cursorDown",
+        "when": "editorTextFocus && !suggestWidgetVisible"
+    },
+    {
+        "key": "alt+a",
+        "command": "cursorLeft",
+        "when": "editorTextFocus && !suggestWidgetVisible"
+    },
+    {
+        "key": "alt+d",
+        "command": "cursorRight",
+        "when": "editorTextFocus && !suggestWidgetVisible"
+    },
+    // Editor same line word jump
+    {
+        "key": "alt+r",
+        "command": "cursorWordEndLeft",
+        "when": "editorTextFocus && !suggestWidgetVisible"
+    },
+    {
+        "key": "alt+f",
+        "command": "cursorWordStartRight",
+        "when": "editorTextFocus && !suggestWidgetVisible"
+    },
+    // Editor vertically move line
+    {
+        "key": "alt+shift+w",
+        "command": "editor.action.moveLinesUpAction",
+        "when": "editorTextFocus && !suggestWidgetVisible"
+    },
+    {
+        "key": "alt+shift+s",
+        "command": "editor.action.moveLinesDownAction",
+        "when": "editorTextFocus && !suggestWidgetVisible"
+    },
+    // Editor vertically dupe line
+    {
+        "key": "alt+shift+a",
+        "command": "editor.action.copyLinesUpAction",
+        "when": "editorTextFocus && !suggestWidgetVisible"
+    },
+    {
+        "key": "alt+shift+d",
+        "command": "editor.action.copyLinesDownAction",
+        "when": "editorTextFocus && !suggestWidgetVisible"
+    },
+    // Editor vertically select lines
+    {
+        "key": "alt+shift+r",
+        "command": "cursorUpSelect",
+        "when": "editorTextFocus && !suggestWidgetVisible"
+    },
+    {
+        "key": "alt+shift+f",
+        "command": "cursorDownSelect",
+        "when": "editorTextFocus && !suggestWidgetVisible"
+    },
+    // Autocomplete navigation
+    {
+        "key": "alt+w",
+        "command": "selectPrevSuggestion",
+        "when": "suggestWidgetVisible"
+    },
+    {
+        "key": "alt+s",
+        "command": "selectNextSuggestion",
+        "when": "suggestWidgetVisible"
+    },
+    // Terminal toggling
+    {
+        "key": "alt+e",
+        "command": "workbench.action.terminal.toggleTerminal"
+    },
+    {
+        "key": "alt+q",
+        "command": "workbench.action.terminal.new"
+    },
+    // Terminal cursor movement
+    {
+        "key": "alt+w",
+        "command": "workbench.action.terminal.sendSequence",
+        "args": { "text": "\u001b[A" },
+        "when": "terminalFocus"
+    },
+    {
+        "key": "alt+a",
+        "command": "workbench.action.terminal.sendSequence",
+        "args": { "text": "\u001b[D" },
+        "when": "terminalFocus"
+    },
+    {
+        "key": "alt+s",
+        "command": "workbench.action.terminal.sendSequence",
+        "args": { "text": "\u001b[B" },
+        "when": "terminalFocus"
+    },
+    {
+        "key": "alt+d",
+        "command": "workbench.action.terminal.sendSequence",
+        "args": { "text": "\u001b[C" },
+        "when": "terminalFocus"
+    },
+]

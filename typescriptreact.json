@@ -1,0 +1,256 @@
+{
+  "Console Log": {
+    "prefix": "clg",
+    "body": ["console.log(${1});"],
+    "description": "Console log"
+  },
+
+    "Arrow Function": {
+    "prefix": "fn",
+    "body": [
+      "const ${1:name} = (${2:params}): ${3:void} => {",
+      "  ${4}",
+      "};"
+    ],
+    "description": "Modern arrow function"
+  },
+
+"Functional Component": {
+  "prefix": "fc",
+  "body": [
+    "type Props = {",
+    "  ${1:key}: ${2:string};",
+    "};",
+    "",
+    "const ${TM_FILENAME_BASE} = ({ ${1:key} }: Props) => {",
+    "  return <></>;",
+    "};",
+    "",
+    "export default ${TM_FILENAME_BASE};"
+  ],
+  "description": "Functional component"
+},
+
+"Functional Component with Children": {
+  "prefix": "fcc",
+  "body": [
+    "import { ReactNode } from 'react';",
+    "",
+    "type Props = {",
+    "  children: ReactNode;",
+    "};",
+    "",
+    "const ${TM_FILENAME_BASE} = ({ children }: Props) => {",
+    "  return <div>{children}</div>;",
+    "};",
+    "",
+    "export default ${TM_FILENAME_BASE};"
+  ],
+  "description": "Functional component with children"
+},
+
+"Memoized Functional Component": {
+  "prefix": "mfc",
+  "body": [
+    "import { memo } from 'react';",
+    "",
+    "type Props = {",
+    "  ${1:key}: ${2:string};",
+    "};",
+    "",
+    "const ${TM_FILENAME_BASE} = memo(({ ${1:key} }: Props) => {",
+    "  return <div>${TM_FILENAME_BASE}</div>;",
+    "});",
+    "",
+    "export default ${TM_FILENAME_BASE};"
+  ],
+  "description": "Memoized functional component"
+},
+
+  "useState": {
+  "prefix": "useState",
+  "body": [
+    "const [${1:state}, set${2:State}] = useState<${3:type}>(${4:init});"
+  ],
+    "description": "useState with type"
+  },
+
+  "useEffect": {
+    "prefix": "useEffect",
+    "body": [
+      "useEffect(() => {",
+      "  ${1}",
+      "}, [${2}]);"
+    ],
+    "description": "useEffect hook"
+  },
+
+  "useMemo": {
+    "prefix": "useMemo",
+  "body": [
+    "const ${1:memoized} = useMemo(() => {",
+    "  return ${2:undefined};",
+    "}, [${3:deps}]);"
+  ],
+    "description": "useMemo hook"
+  },
+
+  "useCallback": {
+    "prefix": "useCallback",
+    "body": [
+      "const ${1:callback} = useCallback((${2:params}) => {",
+      "  ${3}",
+      "}, [${4:deps}]);"
+    ],
+    "description": "useCallback hook"
+  },
+
+"Custom Hook": {
+  "prefix": "useHook",
+  "body": [
+    "import { useState, useEffect } from 'react';",
+    "",
+    "export const ${TM_FILENAME_BASE} = () => {",
+    "  const [${1:value}, set${1/(.*)/${1:/capitalize}/}] = useState<${2:type}>(${3:init});",
+    "",
+    "  useEffect(() => {",
+    "    ${4}",
+    "  }, []);",
+    "",
+    "  return { ${1:value}, set${1/(.*)/${1:/capitalize}/} };",
+    "};"
+  ],
+  "description": "Custom React hook"
+},
+
+"Context + Provider": {
+  "prefix": "context",
+  "body": [
+    "import {",
+    "  createContext,",
+    "  type Dispatch,",
+    "  type ReactNode,",
+    "  type SetStateAction,",
+    "  useContext,",
+    "  useMemo,",
+    "  useState,",
+    "} from 'react';",
+    "",
+    "type ${TM_FILENAME_BASE}Type = {",
+    "  ${1:state}: ${2:type};",
+    "  set${1/(.*)/${1:/capitalize}/}: Dispatch<SetStateAction<${2:type}>>;",
+    "};",
+    "",
+    "const ${TM_FILENAME_BASE}Context = createContext<${TM_FILENAME_BASE}Type | undefined>(undefined);",
+    "",
+    "export const ${TM_FILENAME_BASE}Provider = ({ children }: { children: ReactNode }) => {",
+    "  const [${1:state}, set${1/(.*)/${1:/capitalize}/}] = useState<${2:type}>(${3:init});",
+    "",
+    "  const value = useMemo(() => ({ ${1:state}, set${1/(.*)/${1:/capitalize}/} }), [${1:state}]);",
+    "  return <${TM_FILENAME_BASE}Context.Provider value={value}>{children}</${TM_FILENAME_BASE}Context.Provider>;",
+    "};",
+    "",
+    "export const use${TM_FILENAME_BASE} = () => {",
+    "  const context = useContext(${TM_FILENAME_BASE}Context);",
+    "  if (!context) throw new Error('use${TM_FILENAME_BASE} cannot be consumed without a provider.');",
+    "  return context;",
+    "};"
+  ],
+  "description": "Context with provider and use hook"
+},
+
+"Event function": {
+  "prefix": "eventfn",
+  "body": [
+    "import { ComponentProps } from 'react';",
+    "",
+    "const ${1:onChange}: ComponentProps<'${2:input}'>['${1:onChange}'] = (e) => {",
+    "  ${3}",
+    "};",
+  ],
+  "description": "Event function"
+},
+
+  "Event listener": {
+    "prefix": "eventlistener",
+    "body": [
+      "document.addEventListener('${1:eventType}', handle${2:Event});",
+      "document.removeEventListener('${1:eventType}', handle${2:Event});"
+    ],
+    "description": "Event listener"
+  },
+
+  "Promise Function": {
+    "prefix": "afn",
+    "body": [
+      "const ${1:fnName} = async (${2:params}): Promise<${3:type}> => {",
+	  " ",
+      "  try {",
+      "    ${4}",
+      "  } catch (error) {",
+      "    console.error(error);",
+      "    throw error;",
+      "  }",
+      "};"
+    ],
+    "description": "Async function with try/catch"
+  },
+
+"Fetch Function": {
+  "prefix": "fetch",
+  "body": [
+    "const ${1:getData} = async (): Promise<${2:DataType}> => {",
+    "  try {",
+    "    const result = await fetch('${3:url}');",
+    "    if (!result.ok) throw new Error(result.statusText);",
+    "    const data = await result.json();",
+    "    return data as ${2:DataType};",
+    "  } catch (error) {",
+    "    console.error(error);",
+    "    throw error;",
+    "  }",
+    "};"
+  ],
+  "description": "Fetch wrapper"
+},
+
+  "Interface Alias": {
+    "prefix": "ia",
+    "body": [
+      "interface ${1:Name} {",
+      "  ${2:key}: ${3:type};",
+      "}"
+    ],
+    "description": "TypeScript interface"
+  },
+
+  "Type Alias": {
+    "prefix": "ta",
+    "body": [
+      "type ${1:Name} = {",
+      "  ${2:key}: ${3:type};",
+      "};"
+    ],
+    "description": "TypeScript type alias"
+  },
+  
+  "React ResizeObserver State (with entry check)": {
+    "prefix": "resizeObserveRef",
+    "body": [
+      "const [size, setSize] = useState<Record<'width' | 'height', number>>({ width: 0, height: 0 });",
+      "",
+      "useEffect(() => {",
+      "  const observer = new ResizeObserver(([entry]) => {",
+      "    if (entry) {",
+      "      const { width, height } = entry.contentRect;",
+      "      setSize({ width, height });",
+      "    }",
+      "  });",
+      "",
+      "  if (ref.current) observer.observe(ref.current);",
+      "  return () => observer.disconnect();",
+      "}, []);"
+    ],
+    "description": "React snippet: track element dimensions using ResizeObserver with safety check on entry"
+  }
+}
