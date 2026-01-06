@@ -1,11 +1,5 @@
 {
-  "Console Log": {
-    "prefix": "clg",
-    "body": ["console.log(${1});"],
-    "description": "Console log"
-  },
-
-    "Arrow Function": {
+  "Arrow Function": {
     "prefix": "fn",
     "body": [
       "const ${1:name} = (${2:params}): ${3:void} => {",
@@ -15,161 +9,65 @@
     "description": "Modern arrow function"
   },
 
-"Functional Component": {
-  "prefix": "fc",
-  "body": [
-    "type Props = {",
-    "  ${1:key}: ${2:string};",
-    "};",
-    "",
-    "const ${TM_FILENAME_BASE} = ({ ${1:key} }: Props) => {",
-    "  return <></>;",
-    "};",
-    "",
-    "export default ${TM_FILENAME_BASE};"
-  ],
-  "description": "Functional component"
-},
-
-"Functional Component with Children": {
-  "prefix": "fcc",
-  "body": [
-    "import { ReactNode } from 'react';",
-    "",
-    "type Props = {",
-    "  children: ReactNode;",
-    "};",
-    "",
-    "const ${TM_FILENAME_BASE} = ({ children }: Props) => {",
-    "  return <div>{children}</div>;",
-    "};",
-    "",
-    "export default ${TM_FILENAME_BASE};"
-  ],
-  "description": "Functional component with children"
-},
-
-"Memoized Functional Component": {
-  "prefix": "mfc",
-  "body": [
-    "import { memo } from 'react';",
-    "",
-    "type Props = {",
-    "  ${1:key}: ${2:string};",
-    "};",
-    "",
-    "const ${TM_FILENAME_BASE} = memo(({ ${1:key} }: Props) => {",
-    "  return <div>${TM_FILENAME_BASE}</div>;",
-    "});",
-    "",
-    "export default ${TM_FILENAME_BASE};"
-  ],
-  "description": "Memoized functional component"
-},
-
-  "useState": {
-  "prefix": "useState",
-  "body": [
-    "const [${1:state}, set${2:State}] = useState<${3:type}>(${4:init});"
-  ],
-    "description": "useState with type"
+  "Console Log": {
+    "prefix": "clg",
+    "body": ["console.log(${1});"],
+    "description": "Console log"
   },
 
-  "useEffect": {
-    "prefix": "useEffect",
+  "Context + Provider": {
+    "prefix": "context",
     "body": [
-      "useEffect(() => {",
-      "  ${1}",
-      "}, [${2}]);"
+      "import {",
+      "  createContext,",
+      "  type Dispatch,",
+      "  type ReactNode,",
+      "  type SetStateAction,",
+      "  useContext,",
+      "  useMemo,",
+      "  useState,",
+      "} from 'react';",
+      "",
+      "type ${TM_FILENAME_BASE}Type = {",
+      "  ${1:state}: ${2:type};",
+      "  set${1/(.*)/${1:/capitalize}/}: Dispatch<SetStateAction<${2:type}>>;",
+      "};",
+      "",
+      "const ${TM_FILENAME_BASE}Context = createContext<${TM_FILENAME_BASE}Type | undefined>(undefined);",
+      "",
+      "export const ${TM_FILENAME_BASE}Provider = ({ children }: { children: ReactNode }) => {",
+      "  const [${1:state}, set${1/(.*)/${1:/capitalize}/}] = useState<${2:type}>(${3:init});",
+      "",
+      "  const value = useMemo(() => ({ ${1:state}, set${1/(.*)/${1:/capitalize}/} }), [${1:state}]);",
+      "  return <${TM_FILENAME_BASE}Context.Provider value={value}>{children}</${TM_FILENAME_BASE}Context.Provider>;",
+      "};",
+      "",
+      "export const use${TM_FILENAME_BASE} = () => {",
+      "  const context = useContext(${TM_FILENAME_BASE}Context);",
+      "  if (!context) throw new Error('use${TM_FILENAME_BASE} cannot be consumed without a provider.');",
+      "  return context;",
+      "};"
     ],
-    "description": "useEffect hook"
+    "description": "Context with provider and use hook"
   },
 
-  "useMemo": {
-    "prefix": "useMemo",
-  "body": [
-    "const ${1:memoized} = useMemo(() => {",
-    "  return ${2:undefined};",
-    "}, [${3:deps}]);"
-  ],
-    "description": "useMemo hook"
-  },
-
-  "useCallback": {
-    "prefix": "useCallback",
+  "Custom Hook": {
+    "prefix": "useHook",
     "body": [
-      "const ${1:callback} = useCallback((${2:params}) => {",
-      "  ${3}",
-      "}, [${4:deps}]);"
+      "import { useState, useEffect } from 'react';",
+      "",
+      "export const ${TM_FILENAME_BASE} = () => {",
+      "  const [${1:value}, set${1/(.*)/${1:/capitalize}/}] = useState<${2:type}>(${3:init});",
+      "",
+      "  useEffect(() => {",
+      "    ${4}",
+      "  }, []);",
+      "",
+      "  return { ${1:value}, set${1/(.*)/${1:/capitalize}/} };",
+      "};"
     ],
-    "description": "useCallback hook"
+    "description": "Custom React hook"
   },
-
-"Custom Hook": {
-  "prefix": "useHook",
-  "body": [
-    "import { useState, useEffect } from 'react';",
-    "",
-    "export const ${TM_FILENAME_BASE} = () => {",
-    "  const [${1:value}, set${1/(.*)/${1:/capitalize}/}] = useState<${2:type}>(${3:init});",
-    "",
-    "  useEffect(() => {",
-    "    ${4}",
-    "  }, []);",
-    "",
-    "  return { ${1:value}, set${1/(.*)/${1:/capitalize}/} };",
-    "};"
-  ],
-  "description": "Custom React hook"
-},
-
-"Context + Provider": {
-  "prefix": "context",
-  "body": [
-    "import {",
-    "  createContext,",
-    "  type Dispatch,",
-    "  type ReactNode,",
-    "  type SetStateAction,",
-    "  useContext,",
-    "  useMemo,",
-    "  useState,",
-    "} from 'react';",
-    "",
-    "type ${TM_FILENAME_BASE}Type = {",
-    "  ${1:state}: ${2:type};",
-    "  set${1/(.*)/${1:/capitalize}/}: Dispatch<SetStateAction<${2:type}>>;",
-    "};",
-    "",
-    "const ${TM_FILENAME_BASE}Context = createContext<${TM_FILENAME_BASE}Type | undefined>(undefined);",
-    "",
-    "export const ${TM_FILENAME_BASE}Provider = ({ children }: { children: ReactNode }) => {",
-    "  const [${1:state}, set${1/(.*)/${1:/capitalize}/}] = useState<${2:type}>(${3:init});",
-    "",
-    "  const value = useMemo(() => ({ ${1:state}, set${1/(.*)/${1:/capitalize}/} }), [${1:state}]);",
-    "  return <${TM_FILENAME_BASE}Context.Provider value={value}>{children}</${TM_FILENAME_BASE}Context.Provider>;",
-    "};",
-    "",
-    "export const use${TM_FILENAME_BASE} = () => {",
-    "  const context = useContext(${TM_FILENAME_BASE}Context);",
-    "  if (!context) throw new Error('use${TM_FILENAME_BASE} cannot be consumed without a provider.');",
-    "  return context;",
-    "};"
-  ],
-  "description": "Context with provider and use hook"
-},
-
-"Event function": {
-  "prefix": "eventfn",
-  "body": [
-    "import { ComponentProps } from 'react';",
-    "",
-    "const ${1:onChange}: ComponentProps<'${2:input}'>['${1:onChange}'] = (e) => {",
-    "  ${3}",
-    "};",
-  ],
-  "description": "Event function"
-},
 
   "Event listener": {
     "prefix": "eventlistener",
@@ -180,11 +78,185 @@
     "description": "Event listener"
   },
 
+  "Event function": {
+    "prefix": "eventfn",
+    "body": [
+      "import { ComponentProps } from 'react';",
+      "",
+      "const ${1:onChange}: ComponentProps<'${2:input}'>['${1:onChange}'] = (e) => {",
+      "  ${3}",
+      "};"
+    ],
+    "description": "Event function"
+  },
+
+  "Fetch Function": {
+    "prefix": "fetch",
+    "body": [
+      "const ${1:getData} = async (): Promise<${2:DataType}> => {",
+      "  try {",
+      "    const result = await fetch('${3:url}');",
+      "    if (!result.ok) throw new Error(result.statusText);",
+      "    const data = await result.json();",
+      "    return data as ${2:DataType};",
+      "  } catch (error) {",
+      "    console.error(error);",
+      "    throw error;",
+      "  }",
+      "};"
+    ],
+    "description": "Fetch wrapper"
+  },
+
+  "Functional Component": {
+    "prefix": "fc",
+    "body": [
+      "type Props = {",
+      "  ${1:key}: ${2:string};",
+      "};",
+      "",
+      "const ${TM_FILENAME_BASE} = ({ ${1:key} }: Props) => {",
+      "  return <></>;",
+      "};",
+      "",
+      "export default ${TM_FILENAME_BASE};"
+    ],
+    "description": "Functional component"
+  },
+
+  "Functional Component with Children": {
+    "prefix": "fcc",
+    "body": [
+      "import { ReactNode } from 'react';",
+      "",
+      "type Props = {",
+      "  children: ReactNode;",
+      "};",
+      "",
+      "const ${TM_FILENAME_BASE} = ({ children }: Props) => {",
+      "  return <div>{children}</div>;",
+      "};",
+      "",
+      "export default ${TM_FILENAME_BASE};"
+    ],
+    "description": "Functional component with children"
+  },
+
+  "forwardRefMemo": {
+    "prefix": "ffmfc",
+    "body": [
+      "import { forwardRef, memo } from 'react';",
+      "",
+      "type Props = {",
+      "  ${1:key}: ${2:string};",
+      "};",
+      "",
+      "const ${TM_FILENAME_BASE} = memo(forwardRef<${3:HTMLElement}, Props>(({ ${1:key} }, ref) => {",
+      "  return <div ref={ref}>${TM_FILENAME_BASE}</div>;",
+      "}));",
+      "",
+      "export default ${TM_FILENAME_BASE};"
+    ],
+    "description": "Forward ref + memoized functional component"
+  },
+
+  "Generic API Wrapper Scaffold": {
+    "prefix": "apiWrapper",
+    "body": [
+      "// Endpoint types placeholder",
+      "const endpoints = {",
+      "  never: {},",
+      "  number: {},",
+      "  string: {},",
+      "} as const;",
+      "",
+      "// Key types",
+      "type NeverKeys = keyof typeof endpoints.never;",
+      "type NumberKeys = keyof typeof endpoints.number;",
+      "type StringKeys = keyof typeof endpoints.string;",
+      "",
+      "// Argument shapes",
+      "type ArgumentShapes<K> = K extends NeverKeys",
+      "  ? K",
+      "  : K extends NumberKeys",
+      "    ? { [P in K]: number }",
+      "    : K extends StringKeys",
+      "      ? { [P in K]: string }",
+      "      : undefined;",
+      "",
+      "// Union of all possible arguments",
+      "type Argument = { [K in keyof unknown]: ArgumentShapes<K> }[keyof unknown];",
+      "",
+      "// Map argument to key",
+      "type ArgumentToKey<T> = T extends keyof unknown",
+      "  ? T",
+      "  : T extends { [K in keyof unknown]?: unknown }",
+      "    ? Extract<keyof T, keyof unknown>",
+      "    : never;",
+      "",
+      "// Shape API response",
+      "type CallResponse<T> = T extends unknown[]",
+      "  ? { [K in keyof T]: T[K] extends Argument ? { key: ArgumentToKey<T[K]>; response: unknown } : never }",
+      "  : { key: ArgumentToKey<T>; response: unknown };",
+      "",
+      "// Utility type guards",
+      "function isArray<T>(value: T | T[]): value is T[] {",
+      "  return Array.isArray(value);",
+      "}",
+      "",
+      "function isObject<T>(value: T | object): value is object {",
+      "  return value !== null && typeof value === 'object' && !Array.isArray(value);",
+      "}",
+      "",
+      "export async function apiCall<T extends Argument | Argument[]>(args: T): Promise<CallResponse<T>> {",
+      "  const parameters = isArray(args) ? args : [args];",
+      "",
+      "  const processed = parameters.map((param) => {",
+      "    if (isObject(param)) {",
+      "      return { key: Object.keys(param)[0], response: {} };",
+      "    } else {",
+      "      return { key: param, response: {} };",
+      "    }",
+      "  });",
+      "",
+      "  return isArray(args) ? (processed as CallResponse<T>) : (processed[0] as CallResponse<T>);",
+      "}"
+    ],
+    "description": "Scaffold for a generic API wrapper with utility types, argument shapes, and array/object handling."
+  },
+
+  "Interface Alias": {
+    "prefix": "interfaceAlias",
+    "body": [
+      "interface ${1:Name} {",
+      "  ${2:key}: ${3:type};",
+      "}"
+    ],
+    "description": "TypeScript interface"
+  },
+
+  "Memoized Functional Component": {
+    "prefix": "mfc",
+    "body": [
+      "import { memo } from 'react';",
+      "",
+      "type Props = {",
+      "  ${1:key}: ${2:string};",
+      "};",
+      "",
+      "const ${TM_FILENAME_BASE} = memo(({ ${1:key} }: Props) => {",
+      "  return <div>${TM_FILENAME_BASE}</div>;",
+      "});",
+      "",
+      "export default ${TM_FILENAME_BASE};"
+    ],
+    "description": "Memoized functional component"
+  },
+
   "Promise Function": {
     "prefix": "afn",
     "body": [
       "const ${1:fnName} = async (${2:params}): Promise<${3:type}> => {",
-	  " ",
       "  try {",
       "    ${4}",
       "  } catch (error) {",
@@ -196,46 +268,8 @@
     "description": "Async function with try/catch"
   },
 
-"Fetch Function": {
-  "prefix": "fetch",
-  "body": [
-    "const ${1:getData} = async (): Promise<${2:DataType}> => {",
-    "  try {",
-    "    const result = await fetch('${3:url}');",
-    "    if (!result.ok) throw new Error(result.statusText);",
-    "    const data = await result.json();",
-    "    return data as ${2:DataType};",
-    "  } catch (error) {",
-    "    console.error(error);",
-    "    throw error;",
-    "  }",
-    "};"
-  ],
-  "description": "Fetch wrapper"
-},
-
-  "Interface Alias": {
-    "prefix": "ia",
-    "body": [
-      "interface ${1:Name} {",
-      "  ${2:key}: ${3:type};",
-      "}"
-    ],
-    "description": "TypeScript interface"
-  },
-
-  "Type Alias": {
-    "prefix": "ta",
-    "body": [
-      "type ${1:Name} = {",
-      "  ${2:key}: ${3:type};",
-      "};"
-    ],
-    "description": "TypeScript type alias"
-  },
-  
   "React ResizeObserver State (with entry check)": {
-    "prefix": "resizeObserveRef",
+    "prefix": "resizeObserver",
     "body": [
       "const [size, setSize] = useState<Record<'width' | 'height', number>>({ width: 0, height: 0 });",
       "",
@@ -252,5 +286,132 @@
       "}, []);"
     ],
     "description": "React snippet: track element dimensions using ResizeObserver with safety check on entry"
+  },
+
+  "Type Alias": {
+    "prefix": "typeAlias",
+    "body": [
+      "type ${1:Name} = {",
+      "  ${2:key}: ${3:type};",
+      "};"
+    ],
+    "description": "TypeScript type alias"
+  },
+
+  "tryCatchFinally": {
+    "prefix": "tryCatchFinally",
+    "body": [
+      "try {",
+      "  ${1}",
+      "} catch (error) {",
+      "  console.error(error);",
+      "} finally {",
+      "  ${2}",
+      "}"
+    ],
+    "description": "Try/Catch/Finally block"
+  },
+
+  "optionalChaining": {
+    "prefix": "oc",
+    "body": [
+      "const ${1:variable} = ${2:object}?.${3:prop} ?? ${4:defaultValue};"
+    ],
+    "description": "Optional chaining with nullish coalescing"
+  },
+
+  "useReducer Scaffold": {
+  "prefix": "useReducer",
+  "body": [
+    "import { useReducer } from 'react';",
+    "",
+    "type Action =",
+    "  | { type: 'ACTION_ONE'; payload?: any }",
+    "  | { type: 'ACTION_TWO'; payload?: any };",
+    "",
+    "type State = {",
+    "  ${1:count}: number;",
+    "  ${2:flag}: boolean;",
+    "};",
+    "",
+    "const initialState: State = {",
+    "  ${1:count}: 0,",
+    "  ${2:flag}: false,",
+    "};",
+    "",
+    "const reducer = (state: State, action: Action): State => {",
+    "  switch (action.type) {",
+    "    case 'ACTION_ONE':",
+    "      return { ...state, ${1:count}: state.${1:count} + 1 };",
+    "    case 'ACTION_TWO':",
+    "      return { ...state, ${2:flag}: !state.${2:flag} };",
+    "    default:",
+    "      throw new Error('Unhandled action type');",
+    "  }",
+    "};",
+    "",
+    "const [state, dispatch] = useReducer(reducer, initialState);",
+    "",
+    "// Example usage:",
+    "// dispatch({ type: 'ACTION_ONE' });",
+    "// dispatch({ type: 'ACTION_TWO', payload: {...} });"
+  ],
+  "description": "General useReducer scaffold with TypeScript types and actions"
+},
+
+  "useCallback": {
+    "prefix": "useCallback",
+    "body": [
+      "const ${1:callback} = useCallback((${2:params}) => {",
+      "  ${3}",
+      "}, [${4:deps}]);"
+    ],
+    "description": "useCallback hook"
+  },
+
+  "useEffect": {
+    "prefix": "useEffect",
+    "body": [
+      "useEffect(() => {",
+      "  ${1}",
+      "}, [${2}]);"
+    ],
+    "description": "useEffect hook"
+  },
+
+  "useLayoutEffect": {
+    "prefix": "useLayoutEffect",
+    "body": [
+      "useLayoutEffect(() => {",
+      "  ${1}",
+      "}, [${2:deps}]);"
+    ],
+    "description": "useLayoutEffect hook"
+  },
+
+  "useMemo": {
+    "prefix": "useMemo",
+    "body": [
+      "const ${1:memoized} = useMemo(() => {",
+      "  return ${2:undefined};",
+      "}, [${3:deps}]);"
+    ],
+    "description": "useMemo hook"
+  },
+
+  "useRef": {
+    "prefix": "useRef",
+    "body": [
+      "const ${1:ref} = useRef<${2:HTMLElement | null}>(null);"
+    ],
+    "description": "useRef hook"
+  },
+
+  "useState": {
+    "prefix": "useState",
+    "body": [
+      "const [${1:state}, set${2:State}] = useState<${3:type}>(${4:init});"
+    ],
+    "description": "useState hook"
   }
 }
