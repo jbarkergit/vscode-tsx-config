@@ -27,7 +27,7 @@
   "git.confirmForcePush": true,
   "git.confirmSync": false,
   "git.enableSmartCommit": false,
-  "git.openRepositoryInParentFolders": "prompt",
+  "git.openRepositoryInParentFolders": "never",
   "git.postCommitCommand": "none",
 
   // FONTS
@@ -79,7 +79,7 @@
   "files.exclude": {
     "**/node_modules": true,
     "**/node_modules/**": true,
-    "package-lock.json":true,
+    "package-lock.json":true
   },
   "scm.diffDecorations": "gutter",
   "scm.inputMinLineCount": 3,
@@ -138,7 +138,7 @@
     ".prettierrc.cjs": true,
     "react-router-config.ts": true,
     "reset.d.ts": true,
-    "README.md": true,
+    "README.md": true
   },
   "search.maxResults": 500,
   "search.quickAccess.preserveInput": true,
@@ -158,6 +158,7 @@
   
   // QUALITY OF LIFE
   "diffEditor.experimental.showMoves": true,
+  "editor.inlayHints.enabled": "off",
   "editor.linkedEditing": true,
   "editor.snippetSuggestions": "top",
   "editor.tokenColorCustomizations": {
@@ -171,14 +172,27 @@
     ]
   },
   "editor.wordWrap": "on",
+  "editor.suggest.showClasses": true,
+  "editor.suggest.showConstructors": false,
+  "editor.suggest.showEnumMembers": true,
+  "editor.suggest.showFields": true,
+  "editor.suggest.showFunctions": true,
+  "editor.suggest.showInterfaces": true,
+  "editor.suggest.showMethods": true,
+  "editor.suggest.showModules": true,
+  "editor.suggest.showProperties": true,
+  "editor.suggest.showTypeParameters": true,
+  "editor.suggest.showVariables": true,
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
   "extensions.ignoreRecommendations": true,
+  "files.associations": {
+    "*.html": "html",
+    "*.ts": "typescriptreact",
+    "*.tsx": "typescriptreact"
+  },
   "search.smartCase": true,
   "search.sortOrder": "type",
-  "typescript.preferences.importModuleSpecifier": "non-relative",
-  "typescript.suggest.completeFunctionCalls": true,
-  "typescript.suggest.paths": false,
   "window.closeWhenEmpty": false,
   "window.confirmBeforeClose": "never",
   "window.confirmSaveUntitledWorkspace": true,
@@ -199,6 +213,23 @@
   "workbench.settings.openDefaultSettings": false,
   "workbench.tips.enabled": false,
 
+  // TYPESCRIPT
+  "typescript.autoClosingTags": true,
+  "typescript.disableAutomaticTypeAcquisition": true,
+  "typescript.format.enable": false,
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.preferences.includePackageJsonAutoImports": "off",
+  "typescript.preferences.quoteStyle": "single",
+  "typescript.preferences.useAliasesForRenames": true,
+  "typescript.suggest.autoImports": false,
+  "typescript.suggest.classMemberSnippets.enabled": false,
+  "typescript.suggest.completeFunctionCalls": true,
+  "typescript.suggest.completeJSDocs": false,
+  "typescript.suggest.enabled": true,
+  "typescript.suggest.includeCompletionsForImportStatements": false,
+  "typescript.suggest.paths": false,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+
   // FORMATTING
   "editor.codeActionsOnSave": {
     "source.fixAll.biome": "explicit",
@@ -206,14 +237,31 @@
   },
   "editor.defaultFormatter": "biomejs.biome",
   "[css]": {"editor.defaultFormatter": "biomejs.biome"},
-  "[javascript]": {"editor.defaultFormatter": "biomejs.biome"},
-  "[javascriptreact]": {"editor.defaultFormatter": "biomejs.biome"},
-  "[json]": {"editor.defaultFormatter": "biomejs.biome"},
   "[scss]": {"editor.defaultFormatter": "sibiraj-s.vscode-scss-formatter"},
   "[typescript]": {"editor.defaultFormatter": "biomejs.biome"},
   "[typescriptreact]": {"editor.defaultFormatter": "biomejs.biome"},
+  "[json]": {"editor.defaultFormatter": "biomejs.biome"},
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
+  "editor.formatOnType": false,
+
+  // EXTENSION: MATERIAL ICON THEME
+  "material-icon-theme.activeIconPack": "react",
+  "material-icon-theme.enableLogging": false,
+  "material-icon-theme.files.associations": {},
+  "material-icon-theme.files.color": "#90a4ae",
+  "material-icon-theme.files.customClones": [],
+  "material-icon-theme.folders.associations": {},
+  "material-icon-theme.folders.color": "#90a4ae",
+  "material-icon-theme.folders.customClones": [],
+  "material-icon-theme.hidesExplorerArrows": true,
+  "material-icon-theme.languages.associations": {},
+  "material-icon-theme.languages.customClones": [],
+  "material-icon-theme.logLevel": "info",
+  "material-icon-theme.opacity": 1,
+  "material-icon-theme.rootFolders.associations": {},
+  "material-icon-theme.rootFolders.color": "#90a4ae",
+  "material-icon-theme.saturation": 1,
 
   // EXTENSION: BIOME
   "biome.suggestInstallingGlobally": false,
@@ -357,26 +405,9 @@
   "importCost.svelteExtensions": ["\\.svelte$"],
   "importCost.timeout": 20000,
   "importCost.typescriptExtensions": ["\\.tsx?$"],
-  "importCost.vueExtensions": ["\\.vue$"],
-
-  // EXTENSION: MATERIAL ICON THEME
-  "material-icon-theme.activeIconPack": "react",
-  "material-icon-theme.enableLogging": false,
-  "material-icon-theme.files.associations": {},
-  "material-icon-theme.files.color": "#90a4ae",
-  "material-icon-theme.files.customClones": [],
-  "material-icon-theme.folders.associations": {},
-  "material-icon-theme.folders.color": "#90a4ae",
-  "material-icon-theme.folders.customClones": [],
-  "material-icon-theme.folders.theme": "specific",
-  "material-icon-theme.hidesExplorerArrows": true,
-  "material-icon-theme.languages.associations": {},
-  "material-icon-theme.languages.customClones": [],
-  "material-icon-theme.logLevel": "info",
-  "material-icon-theme.opacity": 1,
-  "material-icon-theme.rootFolders.associations": {},
-  "material-icon-theme.rootFolders.color": "#90a4ae",
-  "material-icon-theme.saturation": 1,
+  "importCost.vueExtensions": [
+    "\\.vue$"
+  ],
 
   // EXTENSION: PATH INTELLISENSE
   "path-intellisense.absolutePathTo": "",
@@ -519,5 +550,5 @@
   "prettier.useEditorConfig": true,
   "prettier.useTabs": false,
   "prettier.vueIndentScriptAndStyle": false,
-  "prettier.withNodeModules": true,
+  "prettier.withNodeModules": true
 }
