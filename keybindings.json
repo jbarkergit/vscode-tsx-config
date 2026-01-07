@@ -2,7 +2,7 @@
     // Folder expand and collapse
     {
         "command": "workbench.files.action.collapseExplorerFolders",
-        "key": "alt+c"
+        "key": "alt+c",
     },
     // Editor arrow keys
     {

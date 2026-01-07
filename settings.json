@@ -550,5 +550,9 @@
   "prettier.useEditorConfig": true,
   "prettier.useTabs": false,
   "prettier.vueIndentScriptAndStyle": false,
-  "prettier.withNodeModules": true
+  "prettier.withNodeModules": true,
+
+  // TOTAL TYPESCRIPT
+  "totalTypeScript.hideAllTips": false,
+  "totalTypeScript.hideBasicTips": true
 }
