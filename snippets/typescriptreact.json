@@ -1,102 +1,164 @@
 {
-  "React Components / rc": {
+  "Arrow Function": {
+    "prefix": "fn",
+    "body": [
+      "const ${1:fn} = (${2}) => {",
+      "  ${3}",
+      "};"
+    ],
+    "description": "Arrow function"
+  },
+  "Exported Arrow Function": {
+    "prefix": "fne",
+    "body": [
+      "export const ${1:fn} = (${2}) => {",
+      "  ${3}",
+      "};"
+    ],
+    "description": "Exported arrow function"
+  },
+
+
+  "React Component": {
     "prefix": "rc",
     "body": [
-      "import type { ReactNode } from 'react';",
+      "import { ReactNode } from 'react';",
       "",
       "type Props = {",
-      "  children?: ReactNode;",
-      "  ${1:// other props}",
+      "  children: ReactNode;",
       "};",
       "",
-      "export const ${TM_FILENAME_BASE} = (props: Props) => {",
+      "export const ${TM_FILENAME_BASE} = ({ children }: Props) => {",
       "  return (",
-      "    <div>",
-      "      ${2:props.children}",
+      "    <div className=\"${2}\">",
+      "      {children}",
       "    </div>",
       "  );",
       "};"
     ],
-    "description": "component"
+    "description": "React component"
   },
-
-  "React Components / rcm": {
-    "prefix": "rcm",
+    "React Generic Component": {
+    "prefix": "rcg",
     "body": [
-      "import { memo } from 'react';",
-      "import type { ReactNode } from 'react';",
+      "import { ReactNode } from 'react';",
       "",
-      "type Props = {",
+      "type Props<T> = {",
+      "  data: T;",
       "  children?: ReactNode;",
-      "  ${1:// other props}",
       "};",
       "",
-      "const ${TM_FILENAME_BASE} = (props: Props) => {",
+      "export const ${TM_FILENAME_BASE} = <T,>({ data, children }: Props<T>) => {",
       "  return (",
-      "    <div>",
-      "      ${2:props.children}",
+      "    <div className=\"${1}\">",
+      "      {children}",
       "    </div>",
       "  );",
+      "};"
+    ],
+    "description": "React generic component"
+  },
+  "React Generic Constrained Component": {
+    "prefix": "rcgc",
+    "body": [
+      "import { ReactNode } from 'react';",
+      "",
+      "type Props<T extends ${1:Record<string, unknown>}> = {",
+      "  data: T;",
+      "  children?: (item: T) => ReactNode;",
       "};",
       "",
-      "export default memo(${TM_FILENAME_BASE});"
+      "export const ${TM_FILENAME_BASE} = <T extends ${1:Record<string, unknown>},>({ data, children }: Props<T>) => {",
+      "  return (",
+      "    <div className=\"${2}\">",
+      "      {children?.(data)}",
+      "    </div>",
+      "  );",
+      "};"
     ],
-    "description": "memo component"
+    "description": "Generic React component with constrained type and render prop narrowing"
   },
-
-  "React Components / rcfr": {
+  "Forwarded React Component": {
     "prefix": "rcfr",
     "body": [
-      "import { forwardRef } from 'react';",
-      "import type { ReactNode } from 'react';",
+      "import { ReactNode, forwardRef } from 'react';",
       "",
       "type Props = {",
-      "  children?: ReactNode;",
-      "  ${1:// other props}",
+      "  children: ReactNode;",
       "};",
       "",
-      "export const ${TM_FILENAME_BASE} = forwardRef<${2:HTMLDivElement}, Props>((props, ref) => {",
-      "  return (",
-      "    <div ref={ref}>",
-      "      ${3:props.children}",
-      "    </div>",
-      "  );",
-      "});",
-      ""
+      "export const ${TM_FILENAME_BASE} = forwardRef<HTMLDivElement, Props>(",
+      "  ({ children }, ref) => {",
+      "    return (",
+      "      <div ref={ref} className=\"${1}\">",
+      "        {children}",
+      "      </div>",
+      "    );",
+      "  }",
+      ");"
     ],
-    "description": "forwardRef component"
+    "description": "React forwardRef component"
   },
 
-  "React Components / rcmfr": {
-    "prefix": "rcmfr",
+
+"React Hooks / useState": {
+  "prefix": "useState",
+  "body": [
+    "const [${1:value}, set${2:Value}] = useState<${3|string,number,boolean,bigint,symbol,unknown,any,never,object,string[],number[],boolean[],Date,ReactNode|}>(${4});"
+  ],
+  "description": "useState<T> with common type options"
+},
+"React Hooks / useRef": {
+  "prefix": "useRef",
+  "body": [
+    "const ${1:ref} = useRef<${2|HTMLDivElement,HTMLSpanElement,HTMLButtonElement,HTMLInputElement,HTMLTextAreaElement,HTMLFormElement,HTMLImageElement,HTMLCanvasElement,HTMLElement,string,number,boolean,bigint,symbol,object,unknown,any|}>(null);"
+  ],
+  "description": "useRef with element + primitive type options"
+},
+  "React Hooks / useEffect": {
+    "prefix": "useEffect",
     "body": [
-      "import type { ReactNode } from 'react';",
-      "import { forwardRef, memo } from 'react';",
+      "useEffect(() => {",
+      "  ${1}",
       "",
-      "type Props = {",
-      "  children?: ReactNode;",
-      "  ${1:// other props}",
-      "};",
-      "",
-      "const ${TM_FILENAME_BASE} = forwardRef<${2:HTMLDivElement}, Props>((props, ref) => {",
-      "  return (",
-      "    <div ref={ref}>",
-      "      ${3:props.children}",
-      "    </div>",
-      "  );",
-      "});",
-      "",
-      "export default memo(${TM_FILENAME_BASE});"
+      "  return () => {",
+      "    ${2}",
+      "  };",
+      "}, [${3}]);"
     ],
-    "description": "memo + forwardRef component"
   },
-
-  "React Hooks / useState": {
-    "prefix": "useState",
-    "body": ["const [${1:value}, set${2:Value}] = useState<${3:Type}${4}>(${5:init});"],
-    "description": "useState<T>"
+  "React Hooks / useCallback": {
+    "prefix": "useCallback",
+    "body": ["const ${1:fn} = useCallback((${2:args: unknown}) => {", "  ${3}", "}, [${4:}]);"],
   },
-
+  "React Hooks / useMemo": {
+    "prefix": "useMemo",
+    "body": ["const ${1:value} = useMemo(() => ${2}, [${3:}]);"],
+  },
+  "React Hooks / useId": {
+    "prefix": "useId",
+    "body": ["const ${1:id} = useId();"],
+  },
+  "React Hooks / useDeferredValue": {
+    "prefix": "useDeferredValue",
+    "body": ["const ${1:deferred} = useDeferredValue(${2:value});"],
+  },
+  "React Hooks / useTransition": {
+    "prefix": "useTransition",
+    "body": ["const [isPending, startTransition] = useTransition();", "", "startTransition(() => {", "  ${1}", "});"],
+  },
+  "React Hooks / useLayoutEffect": {
+  "prefix": "useLayoutEffect",
+  "body": [
+    "useLayoutEffect(() => {",
+    "  ${1:}",
+    "",
+    "  return () => {",
+    "    ${2:}",
+    "  };",
+    "}, [${3:}]);"
+  ],
+},
 "React Hooks / useReducer": {
   "prefix": "useReducer",
   "body": [
@@ -107,11 +169,11 @@
     "};",
     "",
     "type Action =",
-    "  | { type: '${2:SET}'; ${3:payload}: ${4:unknown} }",
-    "  | { type: '${5:RESET}' };",
+    "  | { type: '${2:SET}'; payload: ${3:unknown} }",
+    "  | { type: '${4:RESET}' };",
     "",
     "const initialState: State = {",
-    "  ${6:// init}",
+    "  ${5:// init}",
     "};",
     "",
     "const reducer = (state: State, action: Action): State => {",
@@ -119,9 +181,9 @@
     "    case '${2:SET}':",
     "      return {",
     "        ...state,",
-    "        ${7:// update using action.${3:payload}}",
+    "        ${6:// update using action.payload}",
     "      };",
-    "    case '${5:RESET}':",
+    "    case '${4:RESET}':",
     "      return initialState;",
     "    default:",
     "      return state;",
@@ -130,9 +192,7 @@
     "",
     "const [state, dispatch] = useReducer(reducer, initialState);"
   ],
-  "description": "useReducer minimal (default returns state)"
 },
-
 "React Hooks / useReducerEvent": {
   "prefix": "useReducerEvent",
   "body": [
@@ -177,349 +237,108 @@
     "  return () => ${7}.removeEventListener('${8:eventName}', handler);",
     "}, [${9:/* eventName/target deps */}]);"
   ],
-  "description": "useReducer wired to DOM event"
 },
 
-  "React Hooks / useRef": {
-    "prefix": "useRef",
-    "body": ["const ${1:ref} = useRef<${2:HTMLDivElement}>(null);"],
-    "description": "useRef element"
-  },
 
-"React Hooks / useEffect": {
-  "prefix": "useEffect",
+"React Custom Hook / useStableCallback": {
+  "prefix": "useStableCallback",
   "body": [
-    "useEffect(() => {",
-    "  ${1:// side effect}",
+    "import { useCallback, useLayoutEffect, useRef } from 'react';",
     "",
-    "  return () => {",
-    "    ${2:// cleanup}",
-    "  };",
-    "}, [${3:deps}]);"
-  ],
-  "description": "useEffect (with cleanup scaffold)"
-},
-"React Hooks / useLayoutEffect": {
-  "prefix": "useLayoutEffect",
-  "body": [
-    "useLayoutEffect(() => {",
-    "  ${1:// side effect}",
+    "export const useStableCallback = <T extends (...args: any[]) => any>(fn: T): T => {",
+    "  const ref = useRef(fn);",
     "",
-    "  return () => {",
-    "    ${2:// cleanup}",
-    "  };",
-    "}, [${3:deps}]);"
+    "  useLayoutEffect(() => {",
+    "    ref.current = fn;",
+    "  }, [fn]);",
+    "",
+    "  return useCallback(((...args) => ref.current(...args)) as T, []);",
+    "};"
   ],
-  "description": "useLayoutEffect (with cleanup scaffold)"
 },
-
-  "React Hooks / useEffectAsyncAbort": {
-    "prefix": "useEffectAsyncAbort",
+  "React Custom Hook / useTimeout": {
+    "prefix": "useTimeout",
     "body": [
-      "useEffect(() => {",
-      "  const controller = new AbortController();",
+      "export const use${1:Timeout} = (cb: () => void, delayMs: number | null) => {",
+      "  const callbackRef = useRef(cb);",
+      "  callbackRef.current = cb;",
       "",
-      "  (async () => {",
-      "    ${1}",
-      "  })();",
-      "",
-      "  return () => controller.abort();",
-      "}, [${2:deps}]);"
-    ],
-    "description": "async effect + abort"
-  },
-
-  "React Hooks / useCallback": {
-    "prefix": "useCallback",
-    "body": ["const ${1:fn} = useCallback((${2:args}) => {", "  ${3}", "}, [${4:deps}]);"],
-    "description": "useCallback"
-  },
-
-  "React Hooks / useMemo": {
-    "prefix": "useMemo",
-    "body": ["const ${1:value} = useMemo(() => ${2}, [${3:deps}]);"],
-    "description": "useMemo"
-  },
-
-  "React Hooks / useId": {
-    "prefix": "useId",
-    "body": ["const ${1:id} = useId();"],
-    "description": "useId"
-  },
-
-  "React Hooks / useDeferredValue": {
-    "prefix": "useDeferredValue",
-    "body": ["const ${1:deferred} = useDeferredValue(${2:value});"],
-    "description": "useDeferredValue"
-  },
-
-  "React Hooks / useTransition": {
-    "prefix": "useTransition",
-    "body": ["const [isPending, startTransition] = useTransition();", "", "startTransition(() => {", "  ${1}", "});"],
-    "description": "useTransition"
-  },
-
-  "React Hooks / useStableCallback": {
-    "prefix": "useStableCallback",
-    "body": [
-      "export const useStableCallback = <T extends (...args: any[]) => any>(fn: T): T => {",
-      "  const ref = useRef(fn);",
-      " ",
-      "  useLayoutEffect(() => {",
-      "    ref.current = fn;",
-      "  }, [fn]);",
-      " ",
-      "  return useCallback(((...args) => ref.current(...args)) as T, []);",
+      "  useEffect(() => {",
+      "    if (typeof window === 'undefined' || delayMs === null) return;",
+      "    const id = window.setTimeout(() => callbackRef.current(), delayMs);",
+      "    return () => window.clearTimeout(id);",
+      "  }, [delayMs]);",
       "};"
     ],
-    "description": "stable callback"
   },
-
-"React Hooks / useTimeout": {
-  "prefix": "useTimeout",
-  "body": [
-    "export const useTimeout = (cb: () => void, delayMs: number | null) => {",
-    "  const cbRef = useRef(cb);",
-    "  cbRef.current = cb;",
-    "",
-    "  useEffect(() => {",
-    "    if (typeof window === 'undefined') return;",
-    "    if (delayMs === null) return;",
-    "    const id = window.setTimeout(() => cbRef.current(), delayMs);",
-    "    return () => window.clearTimeout(id);",
-    "  }, [delayMs]);",
-    "};"
-  ],
-  "description": "timeout hook"
-},
-
-"React Hooks / useInterval": {
-  "prefix": "useInterval",
-  "body": [
-    "export const useInterval = (cb: () => void, delayMs: number | null) => {",
-    "  const cbRef = useRef(cb);",
-    "  cbRef.current = cb;",
-    "",
-    "  useEffect(() => {",
-    "    if (delayMs === null) return;",
-    "    const id = window.setInterval(() => cbRef.current(), delayMs);",
-    "    return () => window.clearInterval(id);",
-    "  }, [delayMs]);",
-    "};"
-  ],
-  "description": "interval hook"
-},
-
-  "React Hooks / useLocalStorageState": {
-    "prefix": "useLocalStorageState",
+  "React Custom Hook / useInterval": {
+    "prefix": "useInterval",
     "body": [
-      "export const useLocalStorageState = <T,>(key: string, initial: T) => {",
-      "  const read = () => {",
-      "    if (typeof window === 'undefined') return initial;",
-      "    const raw = window.localStorage.getItem(key);",
-      "    if (!raw) return initial;",
-      "    try { return JSON.parse(raw) as T; } catch { return initial; }",
+      "export const use${1:Interval} = (cb: () => void, delayMs: number | null) => {",
+      "  const callbackRef = useRef(cb);",
+      "  callbackRef.current = cb;",
+      "",
+      "  useEffect(() => {",
+      "    if (typeof window === 'undefined' || delayMs === null) return;",
+      "    const id = window.setInterval(() => callbackRef.current(), delayMs);",
+      "    return () => window.clearInterval(id);",
+      "  }, [delayMs]);",
+      "};"
+    ],
+  },
+    "React Custom Hook / onExteriorClick": {
+    "prefix": "onExteriorClick",
+    "body": [
+      "const ${1:reference} = useRef<${2:HTMLElement}>(null);",
+      "",
+      "useEffect(() => {",
+      "  const ${3:onPointerDown} = (e: PointerEvent) => {",
+      "    if (!${1:reference}.current || !${1:reference}.current.contains(e.target as Node)) {",
+      "      ${4}",
+      "    }",
       "  };",
       "",
-      "  const [value, setValue] = useState<T>(read);",
+      "  document.addEventListener('pointerdown', ${3:onPointerDown}, { passive: true });",
+      "  return () => document.removeEventListener('pointerdown', ${3:onPointerDown});",
+      "}, []);"
+    ],
+  },
+  "React Custom Hook / useRafLoop": {
+    "prefix": "useRafLoop",
+    "body": [
+      "export const useRafLoop = (",
+      "  onFrame: (time: number, delta: number) => void,",
+      "  opts?: { delta?: boolean; enabled?: boolean }",
+      ") => {",
+      "  const frame = useRef<number | null>(null);",
+      "  const last = useRef<number | null>(null);",
       "",
       "  useEffect(() => {",
       "    if (typeof window === 'undefined') return;",
-      "    try { window.localStorage.setItem(key, JSON.stringify(value)); } catch { }",
-      "  }, [key, value]);",
+      "    if (opts?.enabled === false) return;",
       "",
-      "  return [value, setValue] as const;",
-      "};"
-    ],
-    "description": "localStorage state"
-  },
-
-  "React Hooks / useMediaQuery": {
-    "prefix": "useMediaQuery",
-    "body": [
-      "export const useMediaQuery = (query: string) => {",
-      "  const get = () => (typeof window !== 'undefined' ? window.matchMedia(query).matches : false);",
-      "  const [matches, setMatches] = useState(get);",
+      "    const loop = (time: number) => {",
+      "      const prev = last.current ?? time;",
+      "      const delta = opts?.delta === false ? 0 : time - prev;",
+      "      last.current = time;",
       "",
-      "  useEffect(() => {",
-      "    if (typeof window === 'undefined') return;",
-      "    const mql = window.matchMedia(query);",
-      "    const onChange = () => setMatches(mql.matches);",
-      "    onChange();",
-      "    mql.addEventListener('change', onChange);",
-      "    return () => mql.removeEventListener('change', onChange);",
-      "  }, [query]);",
-      "",
-      "  return matches;",
-      "};"
-    ],
-    "description": "matchMedia hook"
-  },
-
-  "React Events / onClick": {
-    "prefix": "onClick",
-    "body": ["const ${1:handleClick} = (e: React.MouseEvent<${2:HTMLButtonElement}>) => {", "  ${3}", "};"],
-    "description": "click handler"
-  },
-
-  "React Events / onChangeInput": {
-    "prefix": "onChangeInput",
-    "body": ["const ${1:handleChange} = (e: React.ChangeEvent<HTMLInputElement>) => {", "  ${2}", "};"],
-    "description": "input change handler"
-  },
-
-  "React Events / onSubmit": {
-    "prefix": "onSubmit",
-    "body": ["const ${1:handleSubmit} = (e: React.FormEvent<HTMLFormElement>) => {", "  e.preventDefault();", "  ${2}", "};"],
-    "description": "submit handler"
-  },
-
-  "DOM / addRemoveListener": {
-  "prefix": "addRemoveListener",
-  "body": [
-    "const ${1:handler} = (e: ${2:Event}) => {",
-    "  ${3}",
-    "};",
-    "",
-    "${4:element}.addEventListener('${5:event}', ${1:handler}${6});",
-    "",
-    "return () => {",
-    "  ${4:element}.removeEventListener('${5:event}', ${1:handler}${6});",
-    "};"
-  ],
-  "description": "element add/removeEventListener (same handler/options)"
-},
-
-  "DOM Events / listen": {
-    "prefix": "listen",
-    "body": [
-      "useEffect(() => {",
-      "  if (typeof ${1|window,document|} === 'undefined') return;",
-      "",
-      "  const handler = (e: ${2:Event}) => {",
-      "    ${3}",
-      "  };",
-      "",
-      "  const opts: AddEventListenerOptions = ${4:{ passive: true }};",
-      "  ${1}.addEventListener('${5:event}', handler, opts);",
-      "  return () => ${1}.removeEventListener('${5:event}', handler, opts);",
-      "}, [${6:deps}]);"
-    ],
-    "description": "window/document listener"
-  },
-
-  "DOM Events / listenElement": {
-    "prefix": "listenElement",
-    "body": [
-      "const ${1:ref} = useRef<${2:HTMLElement}>(null);",
-      "",
-      "useEffect(() => {",
-      "  const el = ${1:ref}.current;",
-      "  if (!el) return;",
-      "",
-      "  const handler = (e: ${3:Event}) => {",
-      "    ${4}",
-      "  };",
-      "",
-      "  const opts: AddEventListenerOptions = ${5:{ passive: true }};",
-      "  el.addEventListener('${6:event}', handler, opts);",
-      "  return () => el.removeEventListener('${6:event}', handler, opts);",
-      "}, [${7:deps}]);"
-    ],
-    "description": "element listener"
-  },
-
-  "DOM Events / listenAbort": {
-    "prefix": "listenAbort",
-    "body": [
-      "useEffect(() => {",
-      "  if (typeof window === 'undefined') return;",
-      "  const controller = new AbortController();",
-      "",
-      "  const handler = (e: ${1:Event}) => {",
-      "    ${2}",
-      "  };",
-      "",
-      "  const opts: AddEventListenerOptions = { signal: controller.signal, passive: ${4:true} };",
-      "  window.addEventListener('${3:event}', handler, opts);",
-      "  return () => controller.abort();",
-      "}, [${5:deps}]);"
-    ],
-    "description": "listener with AbortController"
-  },
-
-"DOM Util / onClickOutside": {
-  "prefix": "onClickOutside",
-  "body": [
-    "const ${1:ref} = useRef<${2:HTMLElement}>(null);",
-    "",
-    "useEffect(() => {",
-    "  const onDown = (e: PointerEvent) => {",
-    "    const el = ${1:ref}.current;",
-    "    if (!el || !el.contains(e.target as Node)) {",
-    "      ${3}",
-    "    }",
-    "  };",
-    "",
-    "  document.addEventListener('pointerdown', onDown, { passive: true });",
-    "  return () => document.removeEventListener('pointerdown', onDown);",
-    "}, [${4:deps}]);"
-  ],
-  "description": "click outside (minimal)"
-},
-
-  "Animation / rafLoop": {
-    "prefix": "rafLoop",
-    "body": [
-      "const frame = useRef<number | null>(null);",
-      "",
-      "useEffect(() => {",
-      "  if (typeof window === 'undefined') return;",
-      "",
-      "  const loop = (time: number) => {",
-      "    ${1}",
-      "    frame.current = requestAnimationFrame(loop);",
-      "  };",
-      "",
-      "  frame.current = requestAnimationFrame(loop);",
-      "  return () => {",
-      "    if (frame.current !== null) cancelAnimationFrame(frame.current);",
-      "  };",
-      "}, []);"
-    ],
-    "description": "RAF loop"
-  },
-
-  "Animation / rafDelta": {
-    "prefix": "rafDelta",
-    "body": [
-      "const frame = useRef<number | null>(null);",
-      "const last = useRef<number | null>(null);",
-      "",
-      "useEffect(() => {",
-      "  if (typeof window === 'undefined') return;",
-      "",
-      "  const loop = (time: number) => {",
-      "    const prev = last.current ?? time;",
-      "    const delta = time - prev;",
-      "    last.current = time;",
-      "",
-      "    ${1}// use delta",
+      "      onFrame(time, delta);",
+      "      frame.current = requestAnimationFrame(loop);",
+      "    };",
       "",
       "    frame.current = requestAnimationFrame(loop);",
-      "  };",
-      "",
-      "  frame.current = requestAnimationFrame(loop);",
-      "  return () => {",
-      "    if (frame.current !== null) cancelAnimationFrame(frame.current);",
-      "  };",
-      "}, []);"
+      "    return () => {",
+      "      if (frame.current !== null) cancelAnimationFrame(frame.current);",
+      "      frame.current = null;",
+      "      last.current = null;",
+      "    };",
+      "  }, [onFrame, opts?.delta, opts?.enabled]);",
+      "};"
     ],
-    "description": "RAF loop + delta"
+    "description": "RAF loop (optionally computes delta) with cleanup"
   },
-
-  "Animation / rafScroll": {
-    "prefix": "rafScroll",
+    "React Custom Hook / useScrollRaf": {
+    "prefix": "useScrollRaf",
     "body": [
       "useEffect(() => {",
       "  if (typeof window === 'undefined') return;",
@@ -539,19 +358,19 @@
       "  return () => window.removeEventListener('scroll', onScroll);",
       "}, []);"
     ],
-    "description": "scroll RAF throttle"
+    "description": "Scroll listener throttled with requestAnimationFrame"
   },
-
-  "Animation / useRafValue": {
+    "React Custom Hook / useRafValue": {
     "prefix": "useRafValue",
     "body": [
       "export const useRafValue = <T,>(initial: T) => {",
       "  const [value, setValue] = useState(initial);",
-      "  const next = useRef<T>(initial);",
+      "  const next = useRef(initial);",
       "  const frame = useRef<number | null>(null);",
       "",
       "  const setRaf = useCallback((v: T) => {",
       "    next.current = v;",
+      "    if (typeof window === 'undefined') return;",
       "    if (frame.current !== null) return;",
       "    frame.current = requestAnimationFrame(() => {",
       "      frame.current = null;",
@@ -566,284 +385,110 @@
       "  return [value, setRaf] as const;",
       "};"
     ],
-    "description": "RAF batched state"
+    "description": "RAF-batched state setter"
   },
-
-  "Observers / useInView": {
-    "prefix": "useIntersectionalObserver",
+  "React Custom Hook / useIntersectionObserver": {
+    "prefix": "useIntersectionObserver",
     "body": [
-      "export const useInView = <T extends Element>(",
+      "export const use${1:IntersectionObserver} = <T extends Element>(",
       "  options: IntersectionObserverInit = { rootMargin: '0px' }",
       ") => {",
-      "  const ref = useRef<T>(null);",
-      "  const [inView, setInView] = useState(false);",
+      "  const ${2:reference} = useRef<T>(null);",
+      "  const [${3:inView}, set${4:InView}] = useState(false);",
       "",
       "  const { root, rootMargin, threshold } = options;",
       "",
       "  useEffect(() => {",
-      "    const el = ref.current;",
-      "    if (!el) return;",
+      "    if (!${2:reference}.current) return;",
       "",
       "    if (typeof IntersectionObserver === 'undefined') {",
-      "      setInView(true);",
+      "      set${4:InView}(true);",
       "      return;",
       "    }",
       "",
-      "    const observer = new IntersectionObserver(([entry]) => {",
-      "      setInView(entry.isIntersecting);",
-      "    }, { root, rootMargin, threshold });",
+      "    const observer = new IntersectionObserver(",
+      "      ([entry]) => {",
+      "        set${4:InView}(entry.isIntersecting);",
+      "      },",
+      "      { root, rootMargin, threshold }",
+      "    );",
       "",
-      "    observer.observe(el);",
+      "    observer.observe(${2:reference}.current);",
+      "",
       "    return () => observer.disconnect();",
       "  }, [root, rootMargin, threshold]);",
       "",
-      "  return { ref, inView };",
+      "  return { ${3:inView}, ${2:reference} };",
       "};"
     ],
-    "description": "IntersectionObserver hook"
+    "description": "IntersectionObserver hook (returns inView + ref)"
   },
-
-  "Observers / useResizeObserver": {
+  "React Custom Hook / useResizeObserver": {
     "prefix": "useResizeObserver",
     "body": [
-      "export const useResizeObserver = <T extends Element>() => {",
-      "  const ref = useRef<T>(null);",
-      "  const [rect, setRect] = useState<DOMRectReadOnly | null>(null);",
+      "export const use${1:ResizeObserver} = <T extends Element>() => {",
+      "  const ${2:reference} = useRef<T>(null);",
+      "  const [${3:rect}, set${4:Rect}] = useState<DOMRectReadOnly | null>(null);",
       "",
       "  useEffect(() => {",
-      "    const el = ref.current;",
-      "    if (!el) return;",
-      "    if (typeof ResizeObserver === 'undefined') return;",
+      "    if (!${2:reference}.current || typeof ResizeObserver === 'undefined') return;",
       "",
       "    const observer = new ResizeObserver(([entry]) => {",
-      "      setRect(entry.contentRect);",
+      "      set${4:Rect}(entry.contentRect);",
       "    });",
       "",
-      "    observer.observe(el);",
+      "    observer.observe(${2:reference}.current);",
+      "",
       "    return () => observer.disconnect();",
       "  }, []);",
       "",
-      "  return { ref, rect };",
+      "  return { ${2:reference}, ${3:rect} };",
       "};"
     ],
-    "description": "ResizeObserver hook"
+    "description": "ResizeObserver hook (returns ref + DOMRect)"
   },
-
-  "TypeScript / tsPrettify": {
-    "prefix": "tsPrettify",
-    "body": ["type Prettify<T> = { [K in keyof T]: T[K] } & {};"],
-    "description": "Prettify<T>"
-  },
-
-  "TypeScript / tsDeepPartial": {
-    "prefix": "tsDeepPartial",
+  "React Custom Hook / useLocalStorageState": {
+    "prefix": "useLocalStorageState",
     "body": [
-      "type DeepPartial<T> = T extends Function",
-      "  ? T",
-      "  : T extends Array<infer U>",
-      "    ? Array<DeepPartial<U>>",
-      "    : T extends object",
-      "      ? { [K in keyof T]?: DeepPartial<T[K]> }",
-      "      : T;"
-    ],
-    "description": "DeepPartial<T>"
-  },
-
-  "TypeScript / tsXor": {
-    "prefix": "tsXor",
-    "body": ["type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };", "type XOR<T, U> = (T | U) extends object ? (Without<T, U> & U) | (Without<U, T> & T) : T | U;"],
-    "description": "XOR<T, U>"
-  },
-
-  "TypeScript / brand": {
-    "prefix": "brand",
-    "body": ["type Brand<T, B> = T & { readonly __brand: B };", "type ${1:Id} = Brand<${2:string}, '${1:Id}'>;"],
-    "description": "Brand<T, B>"
-  },
-
-  "TypeScript / result": {
-    "prefix": "result",
-    "body": ["type Result<T, E = Error> =", "  | { ok: true; value: T }", "  | { ok: false; error: E };"],
-    "description": "Result<T, E>"
-  },
-
-  "TypeScript / objectKeysEntries": {
-    "prefix": "objectKeysEntries",
-    "body": [
-      "const keys = <T extends object>(o: T) => Object.keys(o) as (keyof T)[];",
-      "const entries = <T extends object>(o: T) => Object.entries(o) as [keyof T, T[keyof T]][];"
-    ],
-    "description": "typed keys/entries"
-  },
-
-  "API / apiClient": {
-    "prefix": "apiClient",
-    "body": [
-      "type ApiError = {",
-      "  status: number;",
-      "  message: string;",
-      "  details?: unknown;",
-      "};",
+      "export const use${1:LocalStorageState} = <T,>(key: string, initial: T) => {",
+      "  const read = () => {",
+      "    if (typeof window === 'undefined') return initial;",
       "",
-      "type ApiResult<T> =",
-      "  | { ok: true; data: T }",
-      "  | { ok: false; error: ApiError };",
+      "    const raw = window.localStorage.getItem(key);",
+      "    if (!raw) return initial;",
       "",
-      "type RequestOptions<B = unknown> = {",
-      "  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';",
-      "  headers?: Record<string, string>;",
-      "  query?: Record<string, string | number | boolean | undefined | null>;",
-      "  body?: B;",
-      "  signal?: AbortSignal;",
-      "};",
-      "",
-      "const buildUrl = (base: string, path: string, query?: RequestOptions['query']) => {",
-      "  const origin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost';",
-      "  const baseAbs = base.startsWith('http') ? base : origin + base;",
-      "  const url = new URL(path, baseAbs);",
-      "  if (query) {",
-      "    for (const [k, v] of Object.entries(query)) {",
-      "      if (v === undefined || v === null) continue;",
-      "      url.searchParams.set(k, String(v));",
-      "    }",
-      "  }",
-      "  return url.toString();",
-      "};",
-      "",
-      "export const createApiClient = (baseUrl: string, getAuthHeader?: () => string | undefined) => {",
-      "  const request = async <T, B = unknown>(path: string, opts: RequestOptions<B> = {}): Promise<ApiResult<T>> => {",
-      "    try {",
-      "      const url = buildUrl(baseUrl, path, opts.query);",
-      "      const auth = getAuthHeader?.();",
-      "",
-      "      const res = await fetch(url, {",
-      "        method: opts.method ?? (opts.body ? 'POST' : 'GET'),",
-      "        headers: {",
-      "          ...(opts.body ? { 'Content-Type': 'application/json' } : {}),",
-      "          ...(auth ? { Authorization: auth } : {}),",
-      "          ...opts.headers,",
-      "        },",
-      "        body: opts.body ? JSON.stringify(opts.body) : undefined,",
-      "        signal: opts.signal,",
-      "      });",
-      "",
-      "      if (!res.ok) {",
-      "        let details: unknown = undefined;",
-      "        try { details = await res.json(); } catch { }",
-      "        return { ok: false, error: { status: res.status, message: res.statusText, details } };",
-      "      }",
-      "",
-      "      if (res.status === 204) return { ok: true, data: undefined as T };",
-      "",
-      "      const contentType = res.headers.get('content-type') ?? '';",
-      "      if (!contentType.includes('application/json')) {",
-      "        return { ok: true, data: (await res.text()) as unknown as T };",
-      "      }",
-      "",
-      "      const data = (await res.json()) as T;",
-      "      return { ok: true, data };",
-      "    } catch (err) {",
-      "      const message = err instanceof Error ? err.message : 'Request failed';",
-      "      return { ok: false, error: { status: 0, message, details: err } };",
-      "    }",
+      "    return raw ? (JSON.parse(raw) as T) : initial;",
       "  };",
       "",
-      "  return { request };",
+      "  const [value, setValue] = useState<T>(read);",
+      "",
+      "  useEffect(() => {",
+      "    if (typeof window === 'undefined') return;",
+      "    window.localStorage.setItem(key, JSON.stringify(value));",
+      "  }, [key, value]);",
+      "",
+      "  return [value, setValue] as const;",
       "};"
     ],
-    "description": "API client"
+    "description": "Generic localStorage-backed state hook"
   },
 
-  "API / apiErrorNarrow": {
-    "prefix": "apiErrorNarrow",
-    "body": [
-      "type ApiError = { status: number; message: string; details?: unknown };",
-      "type ApiResult<T> = { ok: true; data: T } | { ok: false; error: ApiError };",
-      "",
-      "const isApiError = (r: ApiResult<unknown>): r is { ok: false; error: ApiError } => !r.ok;"
-    ],
-    "description": "ApiResult narrow"
+
+  "React Events / onClick": {
+    "prefix": "onClick",
+    "body": ["const ${1:handleClick} = (e: React.MouseEvent<${2:HTMLButtonElement}>) => {", "  ${3}", "};"],
+  },
+  "React Events / onChangeInput": {
+    "prefix": "onChangeInput",
+    "body": ["const ${1:handleChange} = (e: React.ChangeEvent<HTMLInputElement>) => {", "  ${2}", "};"],
+  },
+  "React Events / onSubmit": {
+    "prefix": "onSubmit",
+    "body": ["const ${1:handleSubmit} = (e: React.FormEvent<HTMLFormElement>) => {", "  e.preventDefault();", "  ${2}", "};"],
   },
 
-  "API / apiSchema": {
-    "prefix": "apiSchema",
-    "body": [
-      "import { z } from 'zod';",
-      "",
-      "export const ${1:ResponseSchema} = z.object({",
-      "  ${2:id}: z.string(),",
-      "});",
-      "",
-      "export type ${3:Response} = z.infer<typeof ${1:ResponseSchema}>;",
-      "",
-      "export const ${4:fetchThing} = async () => {",
-      "  const res = await fetch(${5:\"/api/thing\"});",
-      "  if (!res.ok) throw new Error(res.statusText);",
-      "  const json = await res.json();",
-      "  return ${1:ResponseSchema}.parse(json);",
-      "};"
-    ],
-    "description": "endpoint + schema"
-  },
 
-  "API / apiEndpoints": {
-    "prefix": "apiEndpoints",
-    "body": [
-      "type EndpointDef = { method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'; path: string };",
-      "type Endpoints = Record<string, EndpointDef>;",
-      "",
-      "type ExtractPathParams<P extends string> =",
-      "  P extends `${string}:${infer Param}/${infer Rest}`",
-      "    ? Param | ExtractPathParams<`/${Rest}`>",
-      "    : P extends `${string}:${infer Param}`",
-      "      ? Param",
-      "      : never;",
-      "",
-      "type PathParams<P extends string> = ExtractPathParams<P> extends never",
-      "  ? {}",
-      "  : { [K in ExtractPathParams<P>]: string | number };",
-      "",
-      "const compilePath = (path: string, params: Record<string, string | number>) =>",
-      "  path.replace(/:([A-Za-z0-9_]+)/g, (_, k) => encodeURIComponent(String(params[k])));",
-      "",
-      "export const endpoints = {",
-      "  ${1:getUser}: { method: 'GET', path: '/users/:id' },",
-      "  ${2:updateUser}: { method: 'PATCH', path: '/users/:id' },",
-      "} satisfies Endpoints;",
-      "",
-      "type EndpointKey = keyof typeof endpoints;",
-      "",
-      "type ApiShapes = {",
-      "  ${1:getUser}: {",
-      "    params: PathParams<(typeof endpoints)['${1:getUser}']['path']>;",
-      "    query?: { ${3:include}?: string };",
-      "    body?: never;",
-      "    response: ${4:User};",
-      "  };",
-      "  ${2:updateUser}: {",
-      "    params: PathParams<(typeof endpoints)['${2:updateUser}']['path']>;",
-      "    query?: never;",
-      "    body: ${5:UpdateUser};",
-      "    response: ${4:User};",
-      "  };",
-      "};",
-      "",
-      "export const createApi = (client: { request: <T, B = unknown>(path: string, opts: any) => Promise<any> }) => ({",
-      "  call: async <K extends EndpointKey>(key: K, input: ApiShapes[K]) => {",
-      "    const def = endpoints[key];",
-      "    const path = compilePath(def.path, (input as any).params ?? {});",
-      "    return client.request<ApiShapes[K]['response'], ApiShapes[K]['body']>(path, {",
-      "      method: def.method,",
-      "      query: (input as any).query,",
-      "      body: (input as any).body,",
-      "    });",
-      "  },",
-      "});"
-    ],
-    "description": "endpoints map"
-  },
-
-  "Forms / formNoLibs": {
+   "Forms / formNoLibs": {
   "prefix": "form",
   "body": [
     "type FormValues = {",
@@ -907,7 +552,6 @@
   ],
   "description": "controlled form + manual validate (no libs)"
 },
-
   "Forms / formZodNoRHF": {
   "prefix": "formZod",
   "body": [
@@ -976,7 +620,6 @@
   ],
   "description": "Zod + controlled form (no react-hook-form)"
 },
-
  "Forms / rhfZodAllInOne": {
   "prefix": "formRHFZod",
   "body": [
@@ -1057,5 +700,295 @@
     "};"
   ],
   "description": "RHF + Zod (schema + useForm + register + useFieldArray + Controller)"
-}
+},
+
+
+  "DOM / listenEvents": {
+    "prefix": "listenEvents",
+    "body": [
+      "const opts: AddEventListenerOptions = { passive: true };",
+      "${1:element}.addEventListener('${2:event}', ${3:handler}, opts);",
+      "return () => ${1:element}.removeEventListener('${2:event}', ${3:handler}, opts);"
+    ],
+    "description": "addEventListener + removeEventListener with shared options"
+  },
+
+
+  "API / apiClient": {
+    "prefix": "apiClient",
+    "body": [
+      "type ApiError = {",
+      "  status: number;",
+      "  message: string;",
+      "  details?: unknown;",
+      "};",
+      "",
+      "type ApiResult<T> =",
+      "  | { ok: true; data: T }",
+      "  | { ok: false; error: ApiError };",
+      "",
+      "type RequestOptions<B = unknown> = {",
+      "  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';",
+      "  headers?: Record<string, string>;",
+      "  query?: Record<string, string | number | boolean | undefined | null>;",
+      "  body?: B;",
+      "  signal?: AbortSignal;",
+      "};",
+      "",
+      "const buildUrl = (base: string, path: string, query?: RequestOptions['query']) => {",
+      "  const origin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost';",
+      "  const baseAbs = base.startsWith('http') ? base : origin + base;",
+      "  const url = new URL(path, baseAbs);",
+      "  if (query) {",
+      "    for (const [k, v] of Object.entries(query)) {",
+      "      if (v === undefined || v === null) continue;",
+      "      url.searchParams.set(k, String(v));",
+      "    }",
+      "  }",
+      "  return url.toString();",
+      "};",
+      "",
+      "export const createApiClient = (baseUrl: string, getAuthHeader?: () => string | undefined) => {",
+      "  const request = async <T, B = unknown>(path: string, opts: RequestOptions<B> = {}): Promise<ApiResult<T>> => {",
+      "    try {",
+      "      const url = buildUrl(baseUrl, path, opts.query);",
+      "      const auth = getAuthHeader?.();",
+      "",
+      "      const res = await fetch(url, {",
+      "        method: opts.method ?? 'GET',",
+      "        headers: {",
+      "          ...(opts.body ? { 'Content-Type': 'application/json' } : {}),",
+      "          ...(auth ? { Authorization: auth } : {}),",
+      "          ...opts.headers,",
+      "        },",
+      "        body: opts.body && (opts.method ?? 'GET') !== 'GET' ? JSON.stringify(opts.body) : undefined,",
+      "        body: (() => {",
+"          const method = opts.method ?? 'GET';",
+"          if (opts.body && method === 'GET') throw new Error('GET requests cannot include a body');",
+"          return opts.body ? JSON.stringify(opts.body) : undefined;",
+"        })(),",
+      "        signal: opts.signal,",
+      "      });",
+      "",
+      "      if (!res.ok) {",
+      "        let details: unknown = undefined;",
+      "        try { details = await res.json(); } catch { }",
+      "        return { ok: false, error: { status: res.status, message: res.statusText, details } };",
+      "      }",
+      "",
+      "      if (res.status === 204) return { ok: true, data: undefined as T };",
+      "",
+      "      const contentType = res.headers.get('content-type') ?? '';",
+      "      if (!contentType.includes('application/json')) {",
+      "        return { ok: true, data: (await res.text()) as unknown as T };",
+      "      }",
+      "",
+      "      const data = (await res.json()) as T;",
+      "      return { ok: true, data };",
+      "    } catch (err) {",
+      "      const message = err instanceof Error ? err.message : 'Request failed';",
+      "      return { ok: false, error: { status: 0, message, details: err } };",
+      "    }",
+      "  };",
+      "",
+      "  return { request };",
+      "};"
+    ],
+    "description": "API client"
+  },
+  "API / apiErrorNarrow": {
+    "prefix": "apiErrorNarrow",
+    "body": [
+      "type ApiError = { status: number; message: string; details?: unknown };",
+      "type ApiResult<T> = { ok: true; data: T } | { ok: false; error: ApiError };",
+      "",
+      "const isApiError = (r: ApiResult<unknown>): r is { ok: false; error: ApiError } => !r.ok;"
+    ],
+    "description": "ApiResult narrow"
+  },
+  "API / apiSchema": {
+    "prefix": "apiSchema",
+    "body": [
+      "import { z } from 'zod';",
+      "",
+      "export const ${1:ResponseSchema} = z.object({",
+      "  ${2:id}: z.string(),",
+      "});",
+      "",
+      "export type ${3:Response} = z.infer<typeof ${1:ResponseSchema}>;",
+      "",
+      "export const ${4:fetchThing} = async () => {",
+      "  const res = await fetch(${5:\"/api/thing\"});",
+      "  if (!res.ok) throw new Error(res.statusText);",
+      "  const json = await res.json();",
+      "  return ${1:ResponseSchema}.parse(json);",
+      "};"
+    ],
+    "description": "endpoint + schema"
+  },
+  "API / apiEndpoints": {
+    "prefix": "apiEndpoints",
+    "body": [
+      "type EndpointDef = { method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'; path: string };",
+      "type Endpoints = Record<string, EndpointDef>;",
+      "",
+      "type ExtractPathParams<P extends string> =",
+      "  P extends `${string}:${infer Param}/${infer Rest}`",
+      "    ? Param | ExtractPathParams<`/${Rest}`>",
+      "    : P extends `${string}:${infer Param}`",
+      "      ? Param",
+      "      : never;",
+      "",
+      "type PathParams<P extends string> = ExtractPathParams<P> extends never",
+      "  ? {}",
+      "  : { [K in ExtractPathParams<P>]: string | number };",
+      "",
+      "const compilePath = (path: string, params: Record<string, string | number>) =>",
+      "  path.replace(/:([A-Za-z0-9_]+)/g, (_, k) => encodeURIComponent(String(params[k])));",
+      "",
+      "export const endpoints = {",
+      "  ${1:getUser}: { method: 'GET', path: '/users/:id' },",
+      "  ${2:updateUser}: { method: 'PATCH', path: '/users/:id' },",
+      "} satisfies Endpoints;",
+      "",
+      "type EndpointKey = keyof typeof endpoints;",
+      "",
+      "type ApiShapes = {",
+      "  ${1:getUser}: {",
+      "    params: PathParams<(typeof endpoints)['${1:getUser}']['path']>;",
+      "    query?: { ${3:include}?: string };",
+      "    body?: never;",
+      "    response: ${4:User};",
+      "  };",
+      "  ${2:updateUser}: {",
+      "    params: PathParams<(typeof endpoints)['${2:updateUser}']['path']>;",
+      "    query?: never;",
+      "    body: ${5:UpdateUser};",
+      "    response: ${4:User};",
+      "  };",
+      "};",
+      "",
+      "export const createApi = (client: { request: <T, B = unknown>(path: string, opts: any) => Promise<any> }) => ({",
+      "  call: async <K extends EndpointKey>(key: K, input: ApiShapes[K]) => {",
+      "    const def = endpoints[key];",
+      "    const path = compilePath(def.path, (input as any).params ?? {});",
+      "    return client.request<ApiShapes[K]['response'], ApiShapes[K]['body']>(path, {",
+      "      method: def.method,",
+      "      query: (input as any).query,",
+      "      body: (input as any).body,",
+      "    });",
+      "  },",
+      "});"
+    ],
+    "description": "endpoints map"
+  },
+
+
+    "TypeScript / tsPrettify": {
+    "prefix": "tsPrettify",
+    "body": ["type Prettify<T> = { [K in keyof T]: T[K] } & {};"],
+    "description": "Prettify<T>"
+  },
+  "TypeScript / tsDeepPartial": {
+    "prefix": "tsDeepPartial",
+    "body": [
+      "type DeepPartial<T> = T extends Function",
+      "  ? T",
+      "  : T extends Array<infer U>",
+      "    ? Array<DeepPartial<U>>",
+      "    : T extends object",
+      "      ? { [K in keyof T]?: DeepPartial<T[K]> }",
+      "      : T;"
+    ],
+    "description": "DeepPartial<T>"
+  },
+  "TypeScript / tsXor": {
+    "prefix": "tsXor",
+    "body": ["type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };", "type XOR<T, U> = (T | U) extends object ? (Without<T, U> & U) | (Without<U, T> & T) : T | U;"],
+    "description": "XOR<T, U>"
+  },
+  "TypeScript / brand": {
+    "prefix": "brand",
+    "body": ["type Brand<T, B> = T & { readonly __brand: B };", "type ${1:Id} = Brand<${2:string}, '${1:Id}'>;"],
+    "description": "Brand<T, B>"
+  },
+  "TypeScript / result": {
+    "prefix": "result",
+    "body": ["type Result<T, E = Error> =", "  | { ok: true; value: T }", "  | { ok: false; error: E };"],
+    "description": "Result<T, E>"
+  },
+  "TypeScript / objectKeysEntries": {
+    "prefix": "objectKeysEntries",
+    "body": [
+      "const keys = <T extends object>(o: T) => Object.keys(o) as (keyof T)[];",
+      "const entries = <T extends object>(o: T) => Object.entries(o) as [keyof T, T[keyof T]][];"
+    ],
+    "description": "typed keys/entries"
+  },
+  "TypeScript / assertNever": {
+    "prefix": "assertNever",
+    "body": [
+      "export const assertNever = (x: never): never => {",
+      "  throw new Error('Unexpected: ' + String(x));",
+      "};"
+    ],
+    "description": "Exhaustiveness helper"
+  },
+  "TypeScript / invariant": {
+    "prefix": "invariant",
+    "body": [
+      "export const invariant = (cond: unknown, msg = 'Invariant failed'): asserts cond => {",
+      "  if (!cond) throw new Error(msg);",
+      "};"
+    ],
+    "description": "Assertion with TS narrowing"
+  },
+  "TypeScript / isDefined": {
+    "prefix": "isDefined",
+    "body": [
+      "export const isDefined = <T,>(v: T | null | undefined): v is T => v !== null && v !== undefined;"
+    ],
+    "description": "Type guard for null/undefined"
+  },
+
+  "React / ErrorBoundary": {
+    "prefix": "ErrorBoundary",
+    "body": [
+      "import React from 'react';",
+      "",
+      "type Props = {",
+      "  children: React.ReactNode;",
+      "  fallback?: React.ReactNode | ((error: Error) => React.ReactNode);",
+      "  onError?: (error: Error, info: React.ErrorInfo) => void;",
+      "  resetKey?: string | number;",
+      "};",
+      "",
+      "type State = { error: Error | null };",
+      "",
+      "export class ErrorBoundary extends React.Component<Props, State> {",
+      "  state: State = { error: null };",
+      "",
+      "  static getDerivedStateFromError = (error: Error): State => ({ error });",
+      "",
+      "  componentDidCatch = (error: Error, info: React.ErrorInfo) => {",
+      "    this.props.onError?.(error, info);",
+      "  };",
+      "",
+      "  componentDidUpdate = (prevProps: Props) => {",
+      "    if (this.state.error && prevProps.resetKey !== this.props.resetKey) {",
+      "      this.setState({ error: null });",
+      "    }",
+      "  };",
+      "",
+      "  render = () => {",
+      "    const { children, fallback } = this.props;",
+      "    const { error } = this.state;",
+      "    if (!error) return children;",
+      "    if (typeof fallback === 'function') return fallback(error);",
+      "    return fallback ?? null;",
+      "  };",
+      "}"
+    ],
+    "description": "ErrorBoundary with fallback + resetKey"
+  },
 }
