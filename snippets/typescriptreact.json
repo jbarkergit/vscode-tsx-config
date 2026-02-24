@@ -47,8 +47,8 @@
   "React Components / rcfr": {
     "prefix": "rcfr",
     "body": [
-      "import type { ReactNode } from 'react';",
       "import { forwardRef } from 'react';",
+      "import type { ReactNode } from 'react';",
       "",
       "type Props = {",
       "  children?: ReactNode;",
@@ -61,7 +61,8 @@
       "      ${3:props.children}",
       "    </div>",
       "  );",
-      "});"
+      "});",
+      ""
     ],
     "description": "forwardRef component"
   },
@@ -174,7 +175,7 @@
     "",
     "  ${7}.addEventListener('${8:eventName}', handler, { passive: true });",
     "  return () => ${7}.removeEventListener('${8:eventName}', handler);",
-    "}, []);"
+    "}, [${9:/* eventName/target deps */}]);"
   ],
   "description": "useReducer wired to DOM event"
 },
@@ -185,19 +186,32 @@
     "description": "useRef element"
   },
 
-  "React Hooks / effect": {
-    "prefix": "useEffect",
-    "body": [
-      "${1|useEffect,useLayoutEffect|}(() => {",
-      "  ${2:// side effect}",
-      "",
-      "  return () => {",
-      "    ${3:// cleanup}",
-      "  };",
-      "}, [${4:deps}]);"
-    ],
-    "description": "useEffect/useLayoutEffect (includes cleanup scaffold)"
-  },
+"React Hooks / useEffect": {
+  "prefix": "useEffect",
+  "body": [
+    "useEffect(() => {",
+    "  ${1:// side effect}",
+    "",
+    "  return () => {",
+    "    ${2:// cleanup}",
+    "  };",
+    "}, [${3:deps}]);"
+  ],
+  "description": "useEffect (with cleanup scaffold)"
+},
+"React Hooks / useLayoutEffect": {
+  "prefix": "useLayoutEffect",
+  "body": [
+    "useLayoutEffect(() => {",
+    "  ${1:// side effect}",
+    "",
+    "  return () => {",
+    "    ${2:// cleanup}",
+    "  };",
+    "}, [${3:deps}]);"
+  ],
+  "description": "useLayoutEffect (with cleanup scaffold)"
+},
 
   "React Hooks / useEffectAsyncAbort": {
     "prefix": "useEffectAsyncAbort",
@@ -269,13 +283,14 @@
     "  cbRef.current = cb;",
     "",
     "  useEffect(() => {",
+    "    if (typeof window === 'undefined') return;",
     "    if (delayMs === null) return;",
     "    const id = window.setTimeout(() => cbRef.current(), delayMs);",
     "    return () => window.clearTimeout(id);",
     "  }, [delayMs]);",
     "};"
   ],
-  "description": "timeout hook (no useLatest)"
+  "description": "timeout hook"
 },
 
 "React Hooks / useInterval": {
@@ -292,7 +307,7 @@
     "  }, [delayMs]);",
     "};"
   ],
-  "description": "interval hook (no useLatest)"
+  "description": "interval hook"
 },
 
   "React Hooks / useLocalStorageState": {
@@ -359,8 +374,24 @@
     "description": "submit handler"
   },
 
+  "DOM / addRemoveListener": {
+  "prefix": "addRemoveListener",
+  "body": [
+    "const ${1:handler} = (e: ${2:Event}) => {",
+    "  ${3}",
+    "};",
+    "",
+    "${4:element}.addEventListener('${5:event}', ${1:handler}${6});",
+    "",
+    "return () => {",
+    "  ${4:element}.removeEventListener('${5:event}', ${1:handler}${6});",
+    "};"
+  ],
+  "description": "element add/removeEventListener (same handler/options)"
+},
+
   "DOM Events / listen": {
-    "prefix": "listenWindow",
+    "prefix": "listen",
     "body": [
       "useEffect(() => {",
       "  if (typeof ${1|window,document|} === 'undefined') return;",
