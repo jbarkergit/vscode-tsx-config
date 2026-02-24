@@ -27,3 +27,6 @@
 ; Duplicate line (using VS Code defaults: Shift+Alt+Up/Down)
 !+q::Send("+!{Up}")     ; Alt+Shift+Q = duplicate line up
 !+e::Send("+!{Down}")   ; Alt+Shift+E = duplicate line down
+
+; Characters
+!x::Send("``")  ; Alt+X = backtick

@@ -1,414 +1,1030 @@
 {
-  "Arrow Function": {
-    "prefix": "fn",
+  "React Components / rc": {
+    "prefix": "rc",
     "body": [
-      "const ${1:name} = (${2:params}): ${3:void} => {",
-      "  ${4}",
-      "};"
-    ],
-    "description": "Modern arrow function"
-  },
-
-  "Console Log": {
-    "prefix": "clg",
-    "body": ["console.log(${1});"],
-    "description": "Console log"
-  },
-
-  "Context + Provider": {
-    "prefix": "context",
-    "body": [
-      "import {",
-      "  createContext,",
-      "  type Dispatch,",
-      "  type ReactNode,",
-      "  type SetStateAction,",
-      "  useContext,",
-      "  useMemo,",
-      "  useState,",
-      "} from 'react';",
-      "",
-      "type ${TM_FILENAME_BASE}Type = {",
-      "  ${1:state}: ${2:type};",
-      "  set${1/(.*)/${1:/capitalize}/}: Dispatch<SetStateAction<${2:type}>>;",
-      "};",
-      "",
-      "const ${TM_FILENAME_BASE}Context = createContext<${TM_FILENAME_BASE}Type | undefined>(undefined);",
-      "",
-      "export const ${TM_FILENAME_BASE}Provider = ({ children }: { children: ReactNode }) => {",
-      "  const [${1:state}, set${1/(.*)/${1:/capitalize}/}] = useState<${2:type}>(${3:init});",
-      "",
-      "  const value = useMemo(() => ({ ${1:state}, set${1/(.*)/${1:/capitalize}/} }), [${1:state}]);",
-      "  return <${TM_FILENAME_BASE}Context.Provider value={value}>{children}</${TM_FILENAME_BASE}Context.Provider>;",
-      "};",
-      "",
-      "export const use${TM_FILENAME_BASE} = () => {",
-      "  const context = useContext(${TM_FILENAME_BASE}Context);",
-      "  if (!context) throw new Error('use${TM_FILENAME_BASE} cannot be consumed without a provider.');",
-      "  return context;",
-      "};"
-    ],
-    "description": "Context with provider and use hook"
-  },
-
-  "Custom Hook": {
-    "prefix": "useHook",
-    "body": [
-      "import { useState, useEffect } from 'react';",
-      "",
-      "export const ${TM_FILENAME_BASE} = () => {",
-      "  const [${1:value}, set${1/(.*)/${1:/capitalize}/}] = useState<${2:type}>(${3:init});",
-      "",
-      "  useEffect(() => {",
-      "    ${4}",
-      "  }, []);",
-      "",
-      "  return { ${1:value}, set${1/(.*)/${1:/capitalize}/} };",
-      "};"
-    ],
-    "description": "Custom React hook"
-  },
-
-  "Event listener": {
-    "prefix": "eventlistener",
-    "body": [
-      "document.addEventListener('${1:eventType}', handle${2:Event});",
-      "document.removeEventListener('${1:eventType}', handle${2:Event});"
-    ],
-    "description": "Event listener"
-  },
-
-  "Event function": {
-    "prefix": "eventfn",
-    "body": [
-      "import { ComponentProps } from 'react';",
-      "",
-      "const ${1:onChange}: ComponentProps<'${2:input}'>['${1:onChange}'] = (e) => {",
-      "  ${3}",
-      "};"
-    ],
-    "description": "Event function"
-  },
-
-  "Generic Fetch": {
-    "prefix": "fetch",
-    "body": [
-      "type ${1:DataType} = unknown;",
-      "",
-      "const callApi = async (",
-      "  abortController: AbortController,",
-      "  endpoint: string,",
-      "  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DEL'",
-      "): Promise<${1:DataType}> => {",
-      "  try {",
-      "    const response = await fetch(endpoint, {",
-      "      method,",
-      "      headers: {",
-      "        accept: 'application/json',",
-      "        Authorization: `Bearer ${import.meta.env['VITE_READ_ACCESS_TOKEN']}`,",
-      "      },",
-      "      signal: abortController.signal,",
-      "    });",
-      "",
-      "    if (!response.ok) throw new Error(response.statusText);",
-      "",
-      "    const data = (await response.json()) as ${1:DataType};",
-      "    return data;",
-      "  } catch (error) {",
-      "    console.error(error);",
-      "    throw error;",
-      "  }",
-      "};"
-    ],
-    "description": "Generic fetch helper without caching"
-  },
-
-  "Generic Fetch with Cache": {
-    "prefix": "fetchCache",
-    "body": [
-      "type ${1:DataType} = unknown;",
-      "",
-      "const callApi = async (",
-      "  abortController: AbortController,",
-      "  endpoint: string,",
-      "  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DEL',",
-      "  key?: string",
-      "): Promise<${1:DataType}> => {",
-      "  const cacheID = 'rest' as const;",
-      "  const rawCache = sessionStorage.getItem(cacheID);",
-      "  const cache = rawCache ? (JSON.parse(rawCache) as Record<string, ${1:DataType}>) : {};",
-      "",
-      "  try {",
-      "    const cached = key ? cache[key] : undefined;",
-      "    if (cached !== undefined) return cached;",
-      "",
-      "    const response = await fetch(endpoint, {",
-      "      method,",
-      "      headers: {",
-      "        accept: 'application/json',",
-      "        Authorization: `Bearer ${import.meta.env['VITE_READ_ACCESS_TOKEN']}`,",
-      "      },",
-      "      signal: abortController.signal,",
-      "    });",
-      "",
-      "    if (!response.ok) throw new Error(response.statusText);",
-      "",
-      "    const data = (await response.json()) as ${1:DataType};",
-      "",
-      "    if (key) {",
-      "      cache[key] = data;",
-      "      sessionStorage.setItem(cacheID, JSON.stringify(cache));",
-      "    }",
-      "",
-      "    return data;",
-      "  } catch (error) {",
-      "    console.error(`${key ? key + ':' : ''}`, error);",
-      "    throw error;",
-      "  }",
-      "};"
-    ],
-    "description": "Generic fetch helper with optional sessionStorage caching"
-  },
-
-  "Functional Component": {
-    "prefix": "fc",
-    "body": [
-      "type Props = {",
-      "  ${1:key}: ${2:string};",
-      "};",
-      "",
-      "const ${TM_FILENAME_BASE} = ({ ${1:key} }: Props) => {",
-      "  return <></>;",
-      "};",
-      "",
-      "export default ${TM_FILENAME_BASE};"
-    ],
-    "description": "Functional component"
-  },
-
-  "Functional Component with Children": {
-    "prefix": "fcc",
-    "body": [
-      "import { ReactNode } from 'react';",
+      "import type { ReactNode } from 'react';",
       "",
       "type Props = {",
-      "  children: ReactNode;",
+      "  children?: ReactNode;",
+      "  ${1:// other props}",
       "};",
       "",
-      "const ${TM_FILENAME_BASE} = ({ children }: Props) => {",
-      "  return <div>{children}</div>;",
-      "};",
-      "",
-      "export default ${TM_FILENAME_BASE};"
+      "export const ${TM_FILENAME_BASE} = (props: Props) => {",
+      "  return (",
+      "    <div>",
+      "      ${2:props.children}",
+      "    </div>",
+      "  );",
+      "};"
     ],
-    "description": "Functional component with children"
+    "description": "component"
   },
 
-  "forwardRefMemo": {
-    "prefix": "ffmfc",
+  "React Components / rcm": {
+    "prefix": "rcm",
     "body": [
+      "import { memo } from 'react';",
+      "import type { ReactNode } from 'react';",
+      "",
+      "type Props = {",
+      "  children?: ReactNode;",
+      "  ${1:// other props}",
+      "};",
+      "",
+      "const ${TM_FILENAME_BASE} = (props: Props) => {",
+      "  return (",
+      "    <div>",
+      "      ${2:props.children}",
+      "    </div>",
+      "  );",
+      "};",
+      "",
+      "export default memo(${TM_FILENAME_BASE});"
+    ],
+    "description": "memo component"
+  },
+
+  "React Components / rcfr": {
+    "prefix": "rcfr",
+    "body": [
+      "import type { ReactNode } from 'react';",
+      "import { forwardRef } from 'react';",
+      "",
+      "type Props = {",
+      "  children?: ReactNode;",
+      "  ${1:// other props}",
+      "};",
+      "",
+      "export const ${TM_FILENAME_BASE} = forwardRef<${2:HTMLDivElement}, Props>((props, ref) => {",
+      "  return (",
+      "    <div ref={ref}>",
+      "      ${3:props.children}",
+      "    </div>",
+      "  );",
+      "});"
+    ],
+    "description": "forwardRef component"
+  },
+
+  "React Components / rcmfr": {
+    "prefix": "rcmfr",
+    "body": [
+      "import type { ReactNode } from 'react';",
       "import { forwardRef, memo } from 'react';",
       "",
       "type Props = {",
-      "  ${1:key}: ${2:string};",
+      "  children?: ReactNode;",
+      "  ${1:// other props}",
       "};",
       "",
-      "const ${TM_FILENAME_BASE} = memo(forwardRef<${3:HTMLElement}, Props>(({ ${1:key} }, ref) => {",
-      "  return <div ref={ref}>${TM_FILENAME_BASE}</div>;",
-      "}));",
-      "",
-      "export default ${TM_FILENAME_BASE};"
-    ],
-    "description": "Forward ref + memoized functional component"
-  },
-
-  "Interface Alias": {
-    "prefix": "interfaceAlias",
-    "body": [
-      "interface ${1:Name} {",
-      "  ${2:key}: ${3:type};",
-      "}"
-    ],
-    "description": "TypeScript interface"
-  },
-
-  "Memoized Functional Component": {
-    "prefix": "mfc",
-    "body": [
-      "import { memo } from 'react';",
-      "",
-      "type Props = {",
-      "  ${1:key}: ${2:string};",
-      "};",
-      "",
-      "const ${TM_FILENAME_BASE} = memo(({ ${1:key} }: Props) => {",
-      "  return <div>${TM_FILENAME_BASE}</div>;",
+      "const ${TM_FILENAME_BASE} = forwardRef<${2:HTMLDivElement}, Props>((props, ref) => {",
+      "  return (",
+      "    <div ref={ref}>",
+      "      ${3:props.children}",
+      "    </div>",
+      "  );",
       "});",
       "",
-      "export default ${TM_FILENAME_BASE};"
+      "export default memo(${TM_FILENAME_BASE});"
     ],
-    "description": "Memoized functional component"
+    "description": "memo + forwardRef component"
   },
 
-  "Promise Function": {
-    "prefix": "afn",
-    "body": [
-      "const ${1:fnName} = async (${2:params}): Promise<${3:type}> => {",
-      "  try {",
-      "    ${4}",
-      "  } catch (error) {",
-      "    console.error(error);",
-      "    throw error;",
-      "  }",
-      "};"
-    ],
-    "description": "Async function with try/catch"
+  "React Hooks / useState": {
+    "prefix": "useState",
+    "body": ["const [${1:value}, set${2:Value}] = useState<${3:Type}${4}>(${5:init});"],
+    "description": "useState<T>"
   },
 
-  "React ResizeObserver State (with entry check)": {
-    "prefix": "resizeObserver",
-    "body": [
-      "const [size, setSize] = useState<Record<'width' | 'height', number>>({ width: 0, height: 0 });",
-      "",
-      "useEffect(() => {",
-      "  const observer = new ResizeObserver(([entry]) => {",
-      "    if (entry) {",
-      "      const { width, height } = entry.contentRect;",
-      "      setSize({ width, height });",
-      "    }",
-      "  });",
-      "",
-      "  if (ref.current) observer.observe(ref.current);",
-      "  return () => observer.disconnect();",
-      "}, []);"
-    ],
-    "description": "React snippet: track element dimensions using ResizeObserver with safety check on entry"
-  },
-
-  "Type Alias": {
-    "prefix": "typeAlias",
-    "body": [
-      "type ${1:Name} = {",
-      "  ${2:key}: ${3:type};",
-      "};"
-    ],
-    "description": "TypeScript type alias"
-  },
-
-  "tryCatchFinally": {
-    "prefix": "tryCatchFinally",
-    "body": [
-      "try {",
-      "  ${1}",
-      "} catch (error) {",
-      "  console.error(error);",
-      "} finally {",
-      "  ${2}",
-      "}"
-    ],
-    "description": "Try/Catch/Finally block"
-  },
-
-  "optionalChaining": {
-    "prefix": "oc",
-    "body": [
-      "const ${1:variable} = ${2:object}?.${3:prop} ?? ${4:defaultValue};"
-    ],
-    "description": "Optional chaining with nullish coalescing"
-  },
-
-  "useReducer Scaffold": {
+"React Hooks / useReducer": {
   "prefix": "useReducer",
   "body": [
     "import { useReducer } from 'react';",
     "",
-    "type Action =",
-    "  | { type: 'ACTION_ONE'; payload?: any }",
-    "  | { type: 'ACTION_TWO'; payload?: any };",
-    "",
     "type State = {",
-    "  ${1:count}: number;",
-    "  ${2:flag}: boolean;",
+    "  ${1:// fields}",
     "};",
     "",
+    "type Action =",
+    "  | { type: '${2:SET}'; ${3:payload}: ${4:unknown} }",
+    "  | { type: '${5:RESET}' };",
+    "",
     "const initialState: State = {",
-    "  ${1:count}: 0,",
-    "  ${2:flag}: false,",
+    "  ${6:// init}",
     "};",
     "",
     "const reducer = (state: State, action: Action): State => {",
     "  switch (action.type) {",
-    "    case 'ACTION_ONE':",
-    "      return { ...state, ${1:count}: state.${1:count} + 1 };",
-    "    case 'ACTION_TWO':",
-    "      return { ...state, ${2:flag}: !state.${2:flag} };",
+    "    case '${2:SET}':",
+    "      return {",
+    "        ...state,",
+    "        ${7:// update using action.${3:payload}}",
+    "      };",
+    "    case '${5:RESET}':",
+    "      return initialState;",
     "    default:",
-    "      throw new Error('Unhandled action type');",
+    "      return state;",
+    "  }",
+    "};",
+    "",
+    "const [state, dispatch] = useReducer(reducer, initialState);"
+  ],
+  "description": "useReducer minimal (default returns state)"
+},
+
+"React Hooks / useReducerEvent": {
+  "prefix": "useReducerEvent",
+  "body": [
+    "import { useEffect, useReducer } from 'react';",
+    "",
+    "type State = {",
+    "  ${1:// fields}",
+    "};",
+    "",
+    "type Action =",
+    "  | { type: '${2:EVENT_ACTION}'; event: ${3:Event} }",
+    "  | { type: '${4:RESET}' };",
+    "",
+    "const initialState: State = {",
+    "  ${5:// init}",
+    "};",
+    "",
+    "const reducer = (state: State, action: Action): State => {",
+    "  switch (action.type) {",
+    "    case '${2:EVENT_ACTION}':",
+    "      return {",
+    "        ...state,",
+    "        ${6:// update using action.event}",
+    "      };",
+    "    case '${4:RESET}':",
+    "      return initialState;",
+    "    default:",
+    "      return state;",
     "  }",
     "};",
     "",
     "const [state, dispatch] = useReducer(reducer, initialState);",
     "",
-    "// Example usage:",
-    "// dispatch({ type: 'ACTION_ONE' });",
-    "// dispatch({ type: 'ACTION_TWO', payload: {...} });"
+    "useEffect(() => {",
+    "  if (typeof ${7|window,document|} === 'undefined') return;",
+    "",
+    "  const handler = (event: ${3:Event}) => {",
+    "    dispatch({ type: '${2:EVENT_ACTION}', event });",
+    "  };",
+    "",
+    "  ${7}.addEventListener('${8:eventName}', handler, { passive: true });",
+    "  return () => ${7}.removeEventListener('${8:eventName}', handler);",
+    "}, []);"
   ],
-  "description": "General useReducer scaffold with TypeScript types and actions"
+  "description": "useReducer wired to DOM event"
 },
 
-  "useCallback": {
-    "prefix": "useCallback",
-    "body": [
-      "const ${1:callback} = useCallback((${2:params}) => {",
-      "  ${3}",
-      "}, [${4:deps}]);"
-    ],
-    "description": "useCallback hook"
+  "React Hooks / useRef": {
+    "prefix": "useRef",
+    "body": ["const ${1:ref} = useRef<${2:HTMLDivElement}>(null);"],
+    "description": "useRef element"
   },
 
-  "useEffect": {
+  "React Hooks / effect": {
     "prefix": "useEffect",
     "body": [
-      "useEffect(() => {",
-      "  ${1}",
-      "}, [${2}]);"
+      "${1|useEffect,useLayoutEffect|}(() => {",
+      "  ${2:// side effect}",
+      "",
+      "  return () => {",
+      "    ${3:// cleanup}",
+      "  };",
+      "}, [${4:deps}]);"
     ],
-    "description": "useEffect hook"
+    "description": "useEffect/useLayoutEffect (includes cleanup scaffold)"
   },
 
-  "useLayoutEffect": {
-    "prefix": "useLayoutEffect",
+  "React Hooks / useEffectAsyncAbort": {
+    "prefix": "useEffectAsyncAbort",
     "body": [
-      "useLayoutEffect(() => {",
-      "  ${1}",
+      "useEffect(() => {",
+      "  const controller = new AbortController();",
+      "",
+      "  (async () => {",
+      "    ${1}",
+      "  })();",
+      "",
+      "  return () => controller.abort();",
       "}, [${2:deps}]);"
     ],
-    "description": "useLayoutEffect hook"
+    "description": "async effect + abort"
   },
 
-  "useMemo": {
+  "React Hooks / useCallback": {
+    "prefix": "useCallback",
+    "body": ["const ${1:fn} = useCallback((${2:args}) => {", "  ${3}", "}, [${4:deps}]);"],
+    "description": "useCallback"
+  },
+
+  "React Hooks / useMemo": {
     "prefix": "useMemo",
-    "body": [
-      "const ${1:memoized} = useMemo(() => {",
-      "  return ${2:undefined};",
-      "}, [${3:deps}]);"
-    ],
-    "description": "useMemo hook"
+    "body": ["const ${1:value} = useMemo(() => ${2}, [${3:deps}]);"],
+    "description": "useMemo"
   },
 
-  "useRef": {
-    "prefix": "useRef",
-    "body": [
-      "const ${1:ref} = useRef<${2:HTMLElement | null}>(null);"
-    ],
-    "description": "useRef hook"
+  "React Hooks / useId": {
+    "prefix": "useId",
+    "body": ["const ${1:id} = useId();"],
+    "description": "useId"
   },
 
-  "useState": {
-    "prefix": "useState",
+  "React Hooks / useDeferredValue": {
+    "prefix": "useDeferredValue",
+    "body": ["const ${1:deferred} = useDeferredValue(${2:value});"],
+    "description": "useDeferredValue"
+  },
+
+  "React Hooks / useTransition": {
+    "prefix": "useTransition",
+    "body": ["const [isPending, startTransition] = useTransition();", "", "startTransition(() => {", "  ${1}", "});"],
+    "description": "useTransition"
+  },
+
+  "React Hooks / useStableCallback": {
+    "prefix": "useStableCallback",
     "body": [
-      "const [${1:state}, set${2:State}] = useState<${3:type}>(${4:init});"
+      "export const useStableCallback = <T extends (...args: any[]) => any>(fn: T): T => {",
+      "  const ref = useRef(fn);",
+      " ",
+      "  useLayoutEffect(() => {",
+      "    ref.current = fn;",
+      "  }, [fn]);",
+      " ",
+      "  return useCallback(((...args) => ref.current(...args)) as T, []);",
+      "};"
     ],
-    "description": "useState hook"
-  }
+    "description": "stable callback"
+  },
+
+"React Hooks / useTimeout": {
+  "prefix": "useTimeout",
+  "body": [
+    "export const useTimeout = (cb: () => void, delayMs: number | null) => {",
+    "  const cbRef = useRef(cb);",
+    "  cbRef.current = cb;",
+    "",
+    "  useEffect(() => {",
+    "    if (delayMs === null) return;",
+    "    const id = window.setTimeout(() => cbRef.current(), delayMs);",
+    "    return () => window.clearTimeout(id);",
+    "  }, [delayMs]);",
+    "};"
+  ],
+  "description": "timeout hook (no useLatest)"
+},
+
+"React Hooks / useInterval": {
+  "prefix": "useInterval",
+  "body": [
+    "export const useInterval = (cb: () => void, delayMs: number | null) => {",
+    "  const cbRef = useRef(cb);",
+    "  cbRef.current = cb;",
+    "",
+    "  useEffect(() => {",
+    "    if (delayMs === null) return;",
+    "    const id = window.setInterval(() => cbRef.current(), delayMs);",
+    "    return () => window.clearInterval(id);",
+    "  }, [delayMs]);",
+    "};"
+  ],
+  "description": "interval hook (no useLatest)"
+},
+
+  "React Hooks / useLocalStorageState": {
+    "prefix": "useLocalStorageState",
+    "body": [
+      "export const useLocalStorageState = <T,>(key: string, initial: T) => {",
+      "  const read = () => {",
+      "    if (typeof window === 'undefined') return initial;",
+      "    const raw = window.localStorage.getItem(key);",
+      "    if (!raw) return initial;",
+      "    try { return JSON.parse(raw) as T; } catch { return initial; }",
+      "  };",
+      "",
+      "  const [value, setValue] = useState<T>(read);",
+      "",
+      "  useEffect(() => {",
+      "    if (typeof window === 'undefined') return;",
+      "    try { window.localStorage.setItem(key, JSON.stringify(value)); } catch { }",
+      "  }, [key, value]);",
+      "",
+      "  return [value, setValue] as const;",
+      "};"
+    ],
+    "description": "localStorage state"
+  },
+
+  "React Hooks / useMediaQuery": {
+    "prefix": "useMediaQuery",
+    "body": [
+      "export const useMediaQuery = (query: string) => {",
+      "  const get = () => (typeof window !== 'undefined' ? window.matchMedia(query).matches : false);",
+      "  const [matches, setMatches] = useState(get);",
+      "",
+      "  useEffect(() => {",
+      "    if (typeof window === 'undefined') return;",
+      "    const mql = window.matchMedia(query);",
+      "    const onChange = () => setMatches(mql.matches);",
+      "    onChange();",
+      "    mql.addEventListener('change', onChange);",
+      "    return () => mql.removeEventListener('change', onChange);",
+      "  }, [query]);",
+      "",
+      "  return matches;",
+      "};"
+    ],
+    "description": "matchMedia hook"
+  },
+
+  "React Events / onClick": {
+    "prefix": "onClick",
+    "body": ["const ${1:handleClick} = (e: React.MouseEvent<${2:HTMLButtonElement}>) => {", "  ${3}", "};"],
+    "description": "click handler"
+  },
+
+  "React Events / onChangeInput": {
+    "prefix": "onChangeInput",
+    "body": ["const ${1:handleChange} = (e: React.ChangeEvent<HTMLInputElement>) => {", "  ${2}", "};"],
+    "description": "input change handler"
+  },
+
+  "React Events / onSubmit": {
+    "prefix": "onSubmit",
+    "body": ["const ${1:handleSubmit} = (e: React.FormEvent<HTMLFormElement>) => {", "  e.preventDefault();", "  ${2}", "};"],
+    "description": "submit handler"
+  },
+
+  "DOM Events / listen": {
+    "prefix": "listenWindow",
+    "body": [
+      "useEffect(() => {",
+      "  if (typeof ${1|window,document|} === 'undefined') return;",
+      "",
+      "  const handler = (e: ${2:Event}) => {",
+      "    ${3}",
+      "  };",
+      "",
+      "  const opts: AddEventListenerOptions = ${4:{ passive: true }};",
+      "  ${1}.addEventListener('${5:event}', handler, opts);",
+      "  return () => ${1}.removeEventListener('${5:event}', handler, opts);",
+      "}, [${6:deps}]);"
+    ],
+    "description": "window/document listener"
+  },
+
+  "DOM Events / listenElement": {
+    "prefix": "listenElement",
+    "body": [
+      "const ${1:ref} = useRef<${2:HTMLElement}>(null);",
+      "",
+      "useEffect(() => {",
+      "  const el = ${1:ref}.current;",
+      "  if (!el) return;",
+      "",
+      "  const handler = (e: ${3:Event}) => {",
+      "    ${4}",
+      "  };",
+      "",
+      "  const opts: AddEventListenerOptions = ${5:{ passive: true }};",
+      "  el.addEventListener('${6:event}', handler, opts);",
+      "  return () => el.removeEventListener('${6:event}', handler, opts);",
+      "}, [${7:deps}]);"
+    ],
+    "description": "element listener"
+  },
+
+  "DOM Events / listenAbort": {
+    "prefix": "listenAbort",
+    "body": [
+      "useEffect(() => {",
+      "  if (typeof window === 'undefined') return;",
+      "  const controller = new AbortController();",
+      "",
+      "  const handler = (e: ${1:Event}) => {",
+      "    ${2}",
+      "  };",
+      "",
+      "  const opts: AddEventListenerOptions = { signal: controller.signal, passive: ${4:true} };",
+      "  window.addEventListener('${3:event}', handler, opts);",
+      "  return () => controller.abort();",
+      "}, [${5:deps}]);"
+    ],
+    "description": "listener with AbortController"
+  },
+
+"DOM Util / onClickOutside": {
+  "prefix": "onClickOutside",
+  "body": [
+    "const ${1:ref} = useRef<${2:HTMLElement}>(null);",
+    "",
+    "useEffect(() => {",
+    "  const onDown = (e: PointerEvent) => {",
+    "    const el = ${1:ref}.current;",
+    "    if (!el || !el.contains(e.target as Node)) {",
+    "      ${3}",
+    "    }",
+    "  };",
+    "",
+    "  document.addEventListener('pointerdown', onDown, { passive: true });",
+    "  return () => document.removeEventListener('pointerdown', onDown);",
+    "}, [${4:deps}]);"
+  ],
+  "description": "click outside (minimal)"
+},
+
+  "Animation / rafLoop": {
+    "prefix": "rafLoop",
+    "body": [
+      "const frame = useRef<number | null>(null);",
+      "",
+      "useEffect(() => {",
+      "  if (typeof window === 'undefined') return;",
+      "",
+      "  const loop = (time: number) => {",
+      "    ${1}",
+      "    frame.current = requestAnimationFrame(loop);",
+      "  };",
+      "",
+      "  frame.current = requestAnimationFrame(loop);",
+      "  return () => {",
+      "    if (frame.current !== null) cancelAnimationFrame(frame.current);",
+      "  };",
+      "}, []);"
+    ],
+    "description": "RAF loop"
+  },
+
+  "Animation / rafDelta": {
+    "prefix": "rafDelta",
+    "body": [
+      "const frame = useRef<number | null>(null);",
+      "const last = useRef<number | null>(null);",
+      "",
+      "useEffect(() => {",
+      "  if (typeof window === 'undefined') return;",
+      "",
+      "  const loop = (time: number) => {",
+      "    const prev = last.current ?? time;",
+      "    const delta = time - prev;",
+      "    last.current = time;",
+      "",
+      "    ${1}// use delta",
+      "",
+      "    frame.current = requestAnimationFrame(loop);",
+      "  };",
+      "",
+      "  frame.current = requestAnimationFrame(loop);",
+      "  return () => {",
+      "    if (frame.current !== null) cancelAnimationFrame(frame.current);",
+      "  };",
+      "}, []);"
+    ],
+    "description": "RAF loop + delta"
+  },
+
+  "Animation / rafScroll": {
+    "prefix": "rafScroll",
+    "body": [
+      "useEffect(() => {",
+      "  if (typeof window === 'undefined') return;",
+      "",
+      "  let ticking = false;",
+      "",
+      "  const onScroll = () => {",
+      "    if (ticking) return;",
+      "    ticking = true;",
+      "    requestAnimationFrame(() => {",
+      "      ${1}",
+      "      ticking = false;",
+      "    });",
+      "  };",
+      "",
+      "  window.addEventListener('scroll', onScroll, { passive: true });",
+      "  return () => window.removeEventListener('scroll', onScroll);",
+      "}, []);"
+    ],
+    "description": "scroll RAF throttle"
+  },
+
+  "Animation / useRafValue": {
+    "prefix": "useRafValue",
+    "body": [
+      "export const useRafValue = <T,>(initial: T) => {",
+      "  const [value, setValue] = useState(initial);",
+      "  const next = useRef<T>(initial);",
+      "  const frame = useRef<number | null>(null);",
+      "",
+      "  const setRaf = useCallback((v: T) => {",
+      "    next.current = v;",
+      "    if (frame.current !== null) return;",
+      "    frame.current = requestAnimationFrame(() => {",
+      "      frame.current = null;",
+      "      setValue(next.current);",
+      "    });",
+      "  }, []);",
+      "",
+      "  useEffect(() => () => {",
+      "    if (frame.current !== null) cancelAnimationFrame(frame.current);",
+      "  }, []);",
+      "",
+      "  return [value, setRaf] as const;",
+      "};"
+    ],
+    "description": "RAF batched state"
+  },
+
+  "Observers / useInView": {
+    "prefix": "useIntersectionalObserver",
+    "body": [
+      "export const useInView = <T extends Element>(",
+      "  options: IntersectionObserverInit = { rootMargin: '0px' }",
+      ") => {",
+      "  const ref = useRef<T>(null);",
+      "  const [inView, setInView] = useState(false);",
+      "",
+      "  const { root, rootMargin, threshold } = options;",
+      "",
+      "  useEffect(() => {",
+      "    const el = ref.current;",
+      "    if (!el) return;",
+      "",
+      "    if (typeof IntersectionObserver === 'undefined') {",
+      "      setInView(true);",
+      "      return;",
+      "    }",
+      "",
+      "    const observer = new IntersectionObserver(([entry]) => {",
+      "      setInView(entry.isIntersecting);",
+      "    }, { root, rootMargin, threshold });",
+      "",
+      "    observer.observe(el);",
+      "    return () => observer.disconnect();",
+      "  }, [root, rootMargin, threshold]);",
+      "",
+      "  return { ref, inView };",
+      "};"
+    ],
+    "description": "IntersectionObserver hook"
+  },
+
+  "Observers / useResizeObserver": {
+    "prefix": "useResizeObserver",
+    "body": [
+      "export const useResizeObserver = <T extends Element>() => {",
+      "  const ref = useRef<T>(null);",
+      "  const [rect, setRect] = useState<DOMRectReadOnly | null>(null);",
+      "",
+      "  useEffect(() => {",
+      "    const el = ref.current;",
+      "    if (!el) return;",
+      "    if (typeof ResizeObserver === 'undefined') return;",
+      "",
+      "    const observer = new ResizeObserver(([entry]) => {",
+      "      setRect(entry.contentRect);",
+      "    });",
+      "",
+      "    observer.observe(el);",
+      "    return () => observer.disconnect();",
+      "  }, []);",
+      "",
+      "  return { ref, rect };",
+      "};"
+    ],
+    "description": "ResizeObserver hook"
+  },
+
+  "TypeScript / tsPrettify": {
+    "prefix": "tsPrettify",
+    "body": ["type Prettify<T> = { [K in keyof T]: T[K] } & {};"],
+    "description": "Prettify<T>"
+  },
+
+  "TypeScript / tsDeepPartial": {
+    "prefix": "tsDeepPartial",
+    "body": [
+      "type DeepPartial<T> = T extends Function",
+      "  ? T",
+      "  : T extends Array<infer U>",
+      "    ? Array<DeepPartial<U>>",
+      "    : T extends object",
+      "      ? { [K in keyof T]?: DeepPartial<T[K]> }",
+      "      : T;"
+    ],
+    "description": "DeepPartial<T>"
+  },
+
+  "TypeScript / tsXor": {
+    "prefix": "tsXor",
+    "body": ["type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };", "type XOR<T, U> = (T | U) extends object ? (Without<T, U> & U) | (Without<U, T> & T) : T | U;"],
+    "description": "XOR<T, U>"
+  },
+
+  "TypeScript / brand": {
+    "prefix": "brand",
+    "body": ["type Brand<T, B> = T & { readonly __brand: B };", "type ${1:Id} = Brand<${2:string}, '${1:Id}'>;"],
+    "description": "Brand<T, B>"
+  },
+
+  "TypeScript / result": {
+    "prefix": "result",
+    "body": ["type Result<T, E = Error> =", "  | { ok: true; value: T }", "  | { ok: false; error: E };"],
+    "description": "Result<T, E>"
+  },
+
+  "TypeScript / objectKeysEntries": {
+    "prefix": "objectKeysEntries",
+    "body": [
+      "const keys = <T extends object>(o: T) => Object.keys(o) as (keyof T)[];",
+      "const entries = <T extends object>(o: T) => Object.entries(o) as [keyof T, T[keyof T]][];"
+    ],
+    "description": "typed keys/entries"
+  },
+
+  "API / apiClient": {
+    "prefix": "apiClient",
+    "body": [
+      "type ApiError = {",
+      "  status: number;",
+      "  message: string;",
+      "  details?: unknown;",
+      "};",
+      "",
+      "type ApiResult<T> =",
+      "  | { ok: true; data: T }",
+      "  | { ok: false; error: ApiError };",
+      "",
+      "type RequestOptions<B = unknown> = {",
+      "  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';",
+      "  headers?: Record<string, string>;",
+      "  query?: Record<string, string | number | boolean | undefined | null>;",
+      "  body?: B;",
+      "  signal?: AbortSignal;",
+      "};",
+      "",
+      "const buildUrl = (base: string, path: string, query?: RequestOptions['query']) => {",
+      "  const origin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost';",
+      "  const baseAbs = base.startsWith('http') ? base : origin + base;",
+      "  const url = new URL(path, baseAbs);",
+      "  if (query) {",
+      "    for (const [k, v] of Object.entries(query)) {",
+      "      if (v === undefined || v === null) continue;",
+      "      url.searchParams.set(k, String(v));",
+      "    }",
+      "  }",
+      "  return url.toString();",
+      "};",
+      "",
+      "export const createApiClient = (baseUrl: string, getAuthHeader?: () => string | undefined) => {",
+      "  const request = async <T, B = unknown>(path: string, opts: RequestOptions<B> = {}): Promise<ApiResult<T>> => {",
+      "    try {",
+      "      const url = buildUrl(baseUrl, path, opts.query);",
+      "      const auth = getAuthHeader?.();",
+      "",
+      "      const res = await fetch(url, {",
+      "        method: opts.method ?? (opts.body ? 'POST' : 'GET'),",
+      "        headers: {",
+      "          ...(opts.body ? { 'Content-Type': 'application/json' } : {}),",
+      "          ...(auth ? { Authorization: auth } : {}),",
+      "          ...opts.headers,",
+      "        },",
+      "        body: opts.body ? JSON.stringify(opts.body) : undefined,",
+      "        signal: opts.signal,",
+      "      });",
+      "",
+      "      if (!res.ok) {",
+      "        let details: unknown = undefined;",
+      "        try { details = await res.json(); } catch { }",
+      "        return { ok: false, error: { status: res.status, message: res.statusText, details } };",
+      "      }",
+      "",
+      "      if (res.status === 204) return { ok: true, data: undefined as T };",
+      "",
+      "      const contentType = res.headers.get('content-type') ?? '';",
+      "      if (!contentType.includes('application/json')) {",
+      "        return { ok: true, data: (await res.text()) as unknown as T };",
+      "      }",
+      "",
+      "      const data = (await res.json()) as T;",
+      "      return { ok: true, data };",
+      "    } catch (err) {",
+      "      const message = err instanceof Error ? err.message : 'Request failed';",
+      "      return { ok: false, error: { status: 0, message, details: err } };",
+      "    }",
+      "  };",
+      "",
+      "  return { request };",
+      "};"
+    ],
+    "description": "API client"
+  },
+
+  "API / apiErrorNarrow": {
+    "prefix": "apiErrorNarrow",
+    "body": [
+      "type ApiError = { status: number; message: string; details?: unknown };",
+      "type ApiResult<T> = { ok: true; data: T } | { ok: false; error: ApiError };",
+      "",
+      "const isApiError = (r: ApiResult<unknown>): r is { ok: false; error: ApiError } => !r.ok;"
+    ],
+    "description": "ApiResult narrow"
+  },
+
+  "API / apiSchema": {
+    "prefix": "apiSchema",
+    "body": [
+      "import { z } from 'zod';",
+      "",
+      "export const ${1:ResponseSchema} = z.object({",
+      "  ${2:id}: z.string(),",
+      "});",
+      "",
+      "export type ${3:Response} = z.infer<typeof ${1:ResponseSchema}>;",
+      "",
+      "export const ${4:fetchThing} = async () => {",
+      "  const res = await fetch(${5:\"/api/thing\"});",
+      "  if (!res.ok) throw new Error(res.statusText);",
+      "  const json = await res.json();",
+      "  return ${1:ResponseSchema}.parse(json);",
+      "};"
+    ],
+    "description": "endpoint + schema"
+  },
+
+  "API / apiEndpoints": {
+    "prefix": "apiEndpoints",
+    "body": [
+      "type EndpointDef = { method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'; path: string };",
+      "type Endpoints = Record<string, EndpointDef>;",
+      "",
+      "type ExtractPathParams<P extends string> =",
+      "  P extends `${string}:${infer Param}/${infer Rest}`",
+      "    ? Param | ExtractPathParams<`/${Rest}`>",
+      "    : P extends `${string}:${infer Param}`",
+      "      ? Param",
+      "      : never;",
+      "",
+      "type PathParams<P extends string> = ExtractPathParams<P> extends never",
+      "  ? {}",
+      "  : { [K in ExtractPathParams<P>]: string | number };",
+      "",
+      "const compilePath = (path: string, params: Record<string, string | number>) =>",
+      "  path.replace(/:([A-Za-z0-9_]+)/g, (_, k) => encodeURIComponent(String(params[k])));",
+      "",
+      "export const endpoints = {",
+      "  ${1:getUser}: { method: 'GET', path: '/users/:id' },",
+      "  ${2:updateUser}: { method: 'PATCH', path: '/users/:id' },",
+      "} satisfies Endpoints;",
+      "",
+      "type EndpointKey = keyof typeof endpoints;",
+      "",
+      "type ApiShapes = {",
+      "  ${1:getUser}: {",
+      "    params: PathParams<(typeof endpoints)['${1:getUser}']['path']>;",
+      "    query?: { ${3:include}?: string };",
+      "    body?: never;",
+      "    response: ${4:User};",
+      "  };",
+      "  ${2:updateUser}: {",
+      "    params: PathParams<(typeof endpoints)['${2:updateUser}']['path']>;",
+      "    query?: never;",
+      "    body: ${5:UpdateUser};",
+      "    response: ${4:User};",
+      "  };",
+      "};",
+      "",
+      "export const createApi = (client: { request: <T, B = unknown>(path: string, opts: any) => Promise<any> }) => ({",
+      "  call: async <K extends EndpointKey>(key: K, input: ApiShapes[K]) => {",
+      "    const def = endpoints[key];",
+      "    const path = compilePath(def.path, (input as any).params ?? {});",
+      "    return client.request<ApiShapes[K]['response'], ApiShapes[K]['body']>(path, {",
+      "      method: def.method,",
+      "      query: (input as any).query,",
+      "      body: (input as any).body,",
+      "    });",
+      "  },",
+      "});"
+    ],
+    "description": "endpoints map"
+  },
+
+  "Forms / formNoLibs": {
+  "prefix": "form",
+  "body": [
+    "type FormValues = {",
+    "  ${1:name}: ${2:string};",
+    "};",
+    "",
+    "type FormErrors = Partial<Record<keyof FormValues, string>>;",
+    "",
+    "const validate = (values: FormValues): FormErrors => {",
+    "  const errors: FormErrors = {};",
+    "  ${3:// errors.name = values.name.trim() ? undefined : 'Required';}",
+    "  return errors;",
+    "};",
+    "",
+    "export const ${TM_FILENAME_BASE} = () => {",
+    "  const [values, setValues] = useState<FormValues>({",
+    "    ${1:name}: ${4:\"\" as any},",
+    "  });",
+    "  const [errors, setErrors] = useState<FormErrors>({});",
+    "  const [isSubmitting, setIsSubmitting] = useState(false);",
+    "",
+    "  const setField = <K extends keyof FormValues>(key: K, value: FormValues[K]) => {",
+    "    setValues((prev) => ({ ...prev, [key]: value }));",
+    "    setErrors((prev) => ({ ...prev, [key]: undefined }));",
+    "  };",
+    "",
+    "  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {",
+    "    e.preventDefault();",
+    "    setIsSubmitting(true);",
+    "",
+    "    const nextErrors = validate(values);",
+    "    setErrors(nextErrors);",
+    "    if (Object.values(nextErrors).some(Boolean)) {",
+    "      setIsSubmitting(false);",
+    "      return;",
+    "    }",
+    "",
+    "    try {",
+    "      ${5:// submit values}",
+    "    } finally {",
+    "      setIsSubmitting(false);",
+    "    }",
+    "  };",
+    "",
+    "  return (",
+    "    <form onSubmit={onSubmit} noValidate>",
+    "      <label>",
+    "        ${1:name}",
+    "        <input",
+    "          value={values.${1:name} as any}",
+    "          onChange={(e) => setField('${1:name}', e.target.value as any)}",
+    "          aria-invalid={!!errors.${1:name}}",
+    "        />",
+    "      </label>",
+    "      {errors.${1:name} && <div role=\"alert\">{errors.${1:name}}</div>}",
+    "",
+    "      <button type=\"submit\" disabled={isSubmitting}>Submit</button>",
+    "    </form>",
+    "  );",
+    "};"
+  ],
+  "description": "controlled form + manual validate (no libs)"
+},
+
+  "Forms / formZodNoRHF": {
+  "prefix": "formZod",
+  "body": [
+    "import { z } from 'zod';",
+    "",
+    "const schema = z.object({",
+    "  ${1:name}: z.string().min(1),",
+    "});",
+    "",
+    "type FormValues = z.infer<typeof schema>;",
+    "",
+    "export const ${TM_FILENAME_BASE} = () => {",
+    "  const [values, setValues] = useState<FormValues>({",
+    "    ${1:name}: ${2:\"\"},",
+    "  });",
+    "  const [errors, setErrors] = useState<Partial<Record<keyof FormValues, string>>>({});",
+    "  const [isSubmitting, setIsSubmitting] = useState(false);",
+    "",
+    "  const onChange = <K extends keyof FormValues>(key: K) =>",
+    "    (e: React.ChangeEvent<HTMLInputElement>) => {",
+    "      const next = { ...values, [key]: e.target.value } as FormValues;",
+    "      setValues(next);",
+    "      setErrors((prev) => ({ ...prev, [key]: undefined }));",
+    "    };",
+    "",
+    "  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {",
+    "    e.preventDefault();",
+    "    setIsSubmitting(true);",
+    "    setErrors({});",
+    "",
+    "    const parsed = schema.safeParse(values);",
+    "    if (!parsed.success) {",
+    "      const nextErrors: Partial<Record<keyof FormValues, string>> = {};",
+    "      for (const issue of parsed.error.issues) {",
+    "        const k = issue.path[0] as keyof FormValues | undefined;",
+    "        if (k && nextErrors[k] == null) nextErrors[k] = issue.message;",
+    "      }",
+    "      setErrors(nextErrors);",
+    "      setIsSubmitting(false);",
+    "      return;",
+    "    }",
+    "",
+    "    try {",
+    "      ${3:// submit parsed.data}",
+    "    } finally {",
+    "      setIsSubmitting(false);",
+    "    }",
+    "  };",
+    "",
+    "  return (",
+    "    <form onSubmit={onSubmit} noValidate>",
+    "      <label>",
+    "        ${1:name}",
+    "        <input",
+    "          value={values.${1:name}}",
+    "          onChange={onChange('${1:name}')}",
+    "          aria-invalid={!!errors.${1:name}}",
+    "        />",
+    "      </label>",
+    "      {errors.${1:name} && <div role=\"alert\">{errors.${1:name}}</div>}",
+    "",
+    "      <button type=\"submit\" disabled={isSubmitting}>Submit</button>",
+    "    </form>",
+    "  );",
+    "};"
+  ],
+  "description": "Zod + controlled form (no react-hook-form)"
+},
+
+ "Forms / rhfZodAllInOne": {
+  "prefix": "formRHFZod",
+  "body": [
+    "import { z } from 'zod';",
+    "import { zodResolver } from '@hookform/resolvers/zod';",
+    "import { Controller, useFieldArray, useForm } from 'react-hook-form';",
+    "",
+    "const schema = z.object({",
+    "  ${1:name}: z.string().min(1),",
+    "  ${2:items}: z.array(z.object({",
+    "    ${3:label}: z.string().min(1),",
+    "  })).default([]),",
+    "});",
+    "",
+    "type FormValues = z.infer<typeof schema>;",
+    "",
+    "export const ${TM_FILENAME_BASE} = () => {",
+    "  const {",
+    "    register,",
+    "    handleSubmit,",
+    "    control,",
+    "    formState: { errors, isSubmitting },",
+    "  } = useForm<FormValues>({",
+    "    resolver: zodResolver(schema),",
+    "    mode: 'onSubmit',",
+    "    reValidateMode: 'onChange',",
+    "    defaultValues: {",
+    "      ${1:name}: ${4:\"\"},",
+    "      ${2:items}: [],",
+    "    },",
+    "  });",
+    "",
+    "  const { fields, append, remove } = useFieldArray({",
+    "    control,",
+    "    name: '${2:items}',",
+    "  });",
+    "",
+    "  const onSubmit = handleSubmit(async (values: FormValues) => {",
+    "    ${5}",
+    "  });",
+    "",
+    "  return (",
+    "    <form onSubmit={onSubmit} noValidate>",
+    "      <label>",
+    "        ${1:name}",
+    "        <input",
+    "          {...register('${1:name}')}",
+    "          aria-invalid={!!errors.${1:name}}",
+    "        />",
+    "      </label>",
+    "      {errors.${1:name} && <div role=\"alert\">{errors.${1:name}.message}</div>}",
+    "",
+    "      <div>",
+    "        <button type=\"button\" onClick={() => append({ ${3:label}: ${6:\"\"} })}>",
+    "          Add ${2:items}",
+    "        </button>",
+    "        {fields.map((field, index) => (",
+    "          <div key={field.id}>",
+    "            <input",
+    "              {...register(`${2:items}.${index}.${3:label}` as const)}",
+    "            />",
+    "            <button type=\"button\" onClick={() => remove(index)}>Remove</button>",
+    "          </div>",
+    "        ))}",
+    "      </div>",
+    "",
+    "      <Controller",
+    "        control={control}",
+    "        name={'${7:someControlledField}' as const}",
+    "        render={({ field }) => (",
+    "          <${8:Component} {...field} ${9} />",
+    "        )}",
+    "      />",
+    "",
+    "      <button type=\"submit\" disabled={isSubmitting}>Submit</button>",
+    "    </form>",
+    "  );",
+    "};"
+  ],
+  "description": "RHF + Zod (schema + useForm + register + useFieldArray + Controller)"
+}
 }
