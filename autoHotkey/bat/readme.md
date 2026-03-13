@@ -23,7 +23,7 @@ Update these paths:
 Typical VS Code install path:
 C:\Users\<username>\AppData\Local\Programs\Microsoft VS Code\Code.exe
 
-### 2. Move the `.bat` Fil
+### 2. Move the `.bat` File
 Move the `.bat` file into the same folder that contains the **Visual Studio Code Start Menu shortcut**.
 
 Common locations:
