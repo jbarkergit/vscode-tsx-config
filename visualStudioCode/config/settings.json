@@ -9,9 +9,10 @@
   "telemetry.enableTelemetry": false,
   "telemetry.feedback.enabled": false,
   "telemetry.telemetryLevel": "off",
-
+  
   // PROGRAMMED INTELLIGENCE
   "chat.agent.enabled": false,
+  "chat.autopilot.enabled": false,
   "chat.commandCenter.enabled": false,
   "chat.disableAIFeatures": true,
   "inlineChat.accessibleDiffView": "off",
@@ -551,6 +552,8 @@
   "prettier.useTabs": false,
   "prettier.vueIndentScriptAndStyle": false,
   "prettier.withNodeModules": true,
+
+  // OTHER
   "json.schemaDownload.trustedDomains": {
     "https://schemastore.azurewebsites.net/": true,
     "https://raw.githubusercontent.com/": true,
